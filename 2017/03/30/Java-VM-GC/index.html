@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?d5cc253e5cbdd2683026f50541666cc0"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="https://blog.darkness463.top/2017/03/30/Java-VM-GC/">
+    
+    
+    <title>【笔记】Java虚拟机(一)-GC | 变猴旅程 | 从人变猴的历程</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Java,GC">
+    <meta name="description" content="很久以前看《深入理解Java虚拟机：JVM高级特性与最佳实践》这本书时，做了一些笔记，分享一下，还有几篇会陆续发上来。文中的东西基本都来自书中。">
+<meta name="keywords" content="Java,GC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【笔记】Java虚拟机(一)-GC">
+<meta property="og:url" content="http://blog.darkness463.top/2017/03/30/Java-VM-GC/index.html">
+<meta property="og:site_name" content="变猴旅程">
+<meta property="og:description" content="很久以前看《深入理解Java虚拟机：JVM高级特性与最佳实践》这本书时，做了一些笔记，分享一下，还有几篇会陆续发上来。文中的东西基本都来自书中。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://blog.darkness463.top/2017/03/30/Java-VM-GC/ReachabilityAnalysis.png">
+<meta property="og:updated_time" content="2018-03-27T15:30:04.527Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【笔记】Java虚拟机(一)-GC">
+<meta name="twitter:description" content="很久以前看《深入理解Java虚拟机：JVM高级特性与最佳实践》这本书时，做了一些笔记，分享一下，还有几篇会陆续发上来。文中的东西基本都来自书中。">
+<meta name="twitter:image" content="http://blog.darkness463.top/2017/03/30/Java-VM-GC/ReachabilityAnalysis.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="变猴旅程" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Darkness463</h5>
+          <a href="mailto:darkness463@gmail.com" title="darkness463@gmail.com" class="mail">darkness463@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/darkness463" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/darkness463" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">【笔记】Java虚拟机(一)-GC</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">【笔记】Java虚拟机(一)-GC</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-03-30T07:00:00.000Z" itemprop="datePublished" class="page-time">
+  2017-03-30
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+
+<article id="post-Java-VM-GC"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">【笔记】Java虚拟机(一)-GC</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-03-30 15:00:00" datetime="2017-03-30T07:00:00.000Z"  itemprop="datePublished">2017-03-30</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>很久以前看《深入理解Java虚拟机：JVM高级特性与最佳实践》这本书时，做了一些笔记，分享一下，还有几篇会陆续发上来。文中的东西基本都来自书中。</p>
+<a id="more"></a>
+<ul>
+<li><p>判断对象是否存活</p>
+<ul>
+<li><p>引用计数算法（Reference Counting）</p>
+<blockquote>
+<p>给对象中添加一个引用计数器，当有一个地方引用它时，计数器值加1；当引用失效时，计数器值减1；任何时刻计数器为0的对象就是还不可能再被使用的。实现简单，判定效率高，但很难解决对象之间相互循环引用的问题。</p>
+</blockquote>
+</li>
+<li><p>可达性分析算法（Reachability Analysis）</p>
+<blockquote>
+<p>通过一系列称为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链（Reference Chain），当一个对象到GC Roots没有任何引用链项链时，则证明此对象是不可用的。</p>
+</blockquote>
+</li>
+<li><p>Java中可作为GC Roots的对象包括下面几种：</p>
+<blockquote>
+<ol>
+<li>虚拟机栈（栈帧中的本地变量表）中引用的对象。</li>
+<li>方法区中类静态属性引用的对象。</li>
+<li>方法区中常量引用的对象。</li>
+<li>本地方法栈中JNI（Native方法）引用的对象。</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2017/03/30/Java-VM-GC/ReachabilityAnalysis.png" alt="可达性分析" title="">
+                </div>
+                <div class="image-caption">可达性分析</div>
+            </figure>
+<ul>
+<li><p>Java中引用关系</p>
+<ul>
+<li><p>强引用（Strong Reference）</p>
+<blockquote>
+<p>类似Object obj = new Object()的引用，只要强引用还存在，垃圾收集器永远不会回收掉被引用的对象。</p>
+</blockquote>
+</li>
+<li><p>软引用（Soft Reference）</p>
+<blockquote>
+<p>用来描述一些还有用但非必需的对象。对于软引用关联着的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。</p>
+</blockquote>
+</li>
+<li><p>弱引用（Weak Reference）</p>
+<blockquote>
+<p>用来描述非必需对象，强度比软引用更弱一些，被弱引用关联的对象只能生存到下一次垃圾收集发生之前。</p>
+</blockquote>
+</li>
+<li><p>虚引用（Phantom Reference）</p>
+<blockquote>
+<p>也称幽灵引用或幻影引用，最弱的一种引用关系。一个对象是否有虚引用的存在完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。为一个对象设置虚引用关联的唯一目的就是能在这个对象被收集器回收时收到一个系统通知。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>finalize方法</p>
+<blockquote>
+<p>当对象进行可达性分析后发现没有与GC Roots相连接的引用链，将会被第一次标记并且进行一次筛选，筛选的条件是此对象是否有必要执行finalize()方法，当对象没有覆盖finalize()方法，或者finalize()方法已经被虚拟机调用过，则视为“没有必要执行”。【因此finalize()方法只会被执行一次】</p>
+<p>执行finalize()方法时，会将该对象放置在一个叫做F-Queue的队列中，并在稍后由一个由虚拟机自动建立的、低优先级的Finalizer线程去执行（触发finalize()方法但不承诺会等待它运行结束，防止finalize()方法执行缓慢导致阻塞）。稍后GC会对F-Queue中的对象进行二次标记，如果对象在finalize()方法中使自己与任一对象建立关联，将被移除出“即将回收”的集合，否则将真正回收。但注意finalize()方法只会执行一次。</p>
+<p>不推荐使用。</p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li><p>垃圾收集算法</p>
+<ul>
+<li><p>标记-清除（Mark-Sweep）算法</p>
+<blockquote>
+<p>先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象。</p>
+<p>不足： </p>
+<ol>
+<li>效率问题，标记和清除两个过程的效率都不高； </li>
+<li>空间问题，标记清除后会产生大量不连续的内存碎片，空间碎片太多可能导致以后程序运行过程中需要分配较大对象时，无法找到足够的连续内存而不得不提前触发另一次垃圾收集动作。</li>
+</ol>
+</blockquote>
+</li>
+<li><p>复制（Copying）算法</p>
+<blockquote>
+<p>将内存划分为大小相等的两块，每次只使用其中一块。当这一块的内存用完了，就将还存活的对象复制到另一块上面，然后再把已使用过的内存空间一次清理掉。</p>
+<p>为减少内存的浪费，实际按8：1：1的比例分为一块较大的Eden空间和两块较小的Survivor空间，每次使用Eden和其中一块Survivor。当回收时，将Eden和Survivor中还存活的对象一次性复制到另一块Survivor空间上，然后清理掉Eden和刚才用过的Survivor空间。当另一块Survivor空间不足存放Eden和Survivor中存活的对象时，需要依赖其他内存（老年代）进行分配担保（Handle Promotion）。</p>
+</blockquote>
+</li>
+<li><p>标记-整理（Mark-Compact）算法</p>
+<blockquote>
+<p>标记过程仍然与“标记-清除”算法一样，但不直接对可回收对象进行清理，而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。</p>
+<p>老年代一般采用该种算法。</p>
+</blockquote>
+</li>
+<li><p>分代收集（Generational Collection）算法</p>
+<blockquote>
+<p>当前商用虚拟机的垃圾收集都采用分代收集算法。一般是把Java堆分为新生代和老年代。在新生代中，每次垃圾收集时都发现有大批对象死去，只有少量存活，那就选用复制算法，只需要付出少量存活对象的复制成本就可以完成收集。而老年代中因为对象存活率高、没有额外空间对它进行分配担保，就必须使用“标记-清理”或者“标记-整理”算法来进行回收。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>垃圾收集器</p>
+<ul>
+<li><p>Serial收集器</p>
+<blockquote>
+<p>单线程的收集器，进行垃圾收集时，必须暂停其他所以的工作线程，直到它收集结束（Stop The World）。复制算法。</p>
+</blockquote>
+</li>
+<li><p>ParNew收集器</p>
+<blockquote>
+<p>Serial收集器的多线程版本，除使用多条线程进行垃圾收集外其余与Serial收集器一样。复制算法。</p>
+</blockquote>
+</li>
+<li><p>Parallel Scavenge收集器</p>
+<blockquote>
+<p>复制算法，并行的多线程收集器。“吞吐量优先”，达到一个可控制的吞吐量（Throughput），吞吐量=运行用户代码时间/（运行用户代码时间+垃圾收集时间）。</p>
+</blockquote>
+</li>
+<li><p>Serial Old收集器</p>
+<blockquote>
+<p>单线程，“标记-整理”算法。</p>
+</blockquote>
+</li>
+<li><p>Parallel Old收集器</p>
+<blockquote>
+<p>多线程，“标记-整理”算法。</p>
+</blockquote>
+</li>
+<li><p>CMS收集器（Concurrent Mark Sweep）</p>
+<blockquote>
+<p>以获取最短回收停顿时间为目标的收集器。“标记-清除”算法。整个过程分为4个步骤，耗时最长的并发标记和并发清除过程收集器线程都可以与用户线程一起工作。</p>
+<ol>
+<li><p>初始标记（CMS initial mark）</p>
+<p> 需stop the world，仅仅标记一下GC Roots能直接关联到的对象，速度很快。</p>
+</li>
+<li><p>并发标记（CMS concurrent mark）</p>
+<p> 进行GC Roots Tracing。</p>
+</li>
+<li><p>重新标记（CMS remark）</p>
+<p> 需stop the world，修正并发标记期间因用户程序继续运行而导致标记产生变动的那一部分对象的标记记录。</p>
+</li>
+<li>并发清除（CMS concurrent sweep）</li>
+</ol>
+</blockquote>
+</li>
+<li><p>G1收集器（Garbage-First）</p>
+<blockquote>
+<p>特点：并行、并发、分代收集、整体“标记-整理”局部（两个Region之间）“复制”算法、可预测的停顿。将整个Java堆划分为多个大小相等的独立区域（Region），跟着各个Region里面的垃圾堆积的价值大小（回收所获得的空间大小以及回收所需时间的经验值），在后台维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的Region。步骤：初始标记（Initial Marking）、并发标记（Concurrent Marking）、最终标记（Final Marking）、筛选回收（Live Data Counting and Evacuation）</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>内存分配与回收策略</p>
+<ul>
+<li><p>对象优先在Eden分配</p>
+<blockquote>
+<p>大多数情况下，对象在新生代Eden区分配，当Eden区没有足够空间进行分配时，虚拟机将发起一次Minor GC。</p>
+</blockquote>
+</li>
+<li><p>大对象直接进入老年代</p>
+<blockquote>
+<p>大对象即需要大量连续内存空间的Java对象，如很长的字符串和数组。</p>
+</blockquote>
+</li>
+<li><p>长期存活的对象将进入老年代</p>
+<blockquote>
+<p>虚拟机给每个对象定义了一个对象年龄（Age）计数器。如果对象在Eden出生并经过第一次Minor GC后仍然存活，并且能被Survivor容纳的话，将被移动到Survivor空间中，并且对象年龄设为1。对象在Survivor区中每“熬过”一次Minor GC，年龄就增加1岁，当它的年龄增加到一定程度（默认15岁），将会被晋升到老年代中。</p>
+</blockquote>
+</li>
+<li><p>动态对象年龄判断</p>
+<blockquote>
+<p>如果在Survivor空间中相同年龄所有对象大小的总和大于Survivor空间的一半，年龄大于或等于该年龄的对象就可以直接进入老年代，无需等到设置要求的年龄。</p>
+</blockquote>
+</li>
+<li><p>空间分配担保</p>
+<blockquote>
+<p>在发生Minor GC之前，虚拟机会先检查老年代最大可用的连续空间是否大于新生代所有对象总空间，如果这个条件成立，那么Minor GC可以确保是安全的。如果不成立，则会查看HandlePromotionFailure设置值是否允许担保失败。如果允许，那么会继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小，如果大于，将尝试进行一次Minor GC，如果小于，或者HandlePromotionFailure设置不允许冒险，则改为进行一次Full GC。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-03-27T15:30:04.527Z" itemprop="dateUpdated">2018-03-27 23:30:04</time>
+</span><br>
+
+
+        
+        <span class="post-time"></span>原始链接：<a href="/2017/03/30/Java-VM-GC/" target="_blank" rel="external">http://blog.darkness463.top/2017/03/30/Java-VM-GC/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.darkness463.top">
+            <img src="/img/avatar.png" alt="Darkness463">
+            Darkness463
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GC/">GC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/&title=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&pic=http://blog.darkness463.top/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/&title=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&source=很久以前看《深入理解Java虚拟机：JVM高级特性与最佳实践》这本书时，做了一些笔记，分享一下，还有几篇会陆续发上来。文中的东西基本都来自书中。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.darkness463.top/2017/03/30/Java-VM-GC/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/&via=http://blog.darkness463.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/04/17/accessibility-event/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">【总结】Android辅助功能(一)-AccessibilityEvent的分发</h4>
+      </a>
+    </div>
+  
+
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <!-- 
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span> -->
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Darkness463 &copy; 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/&title=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&pic=http://blog.darkness463.top/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/&title=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&source=很久以前看《深入理解Java虚拟机：JVM高级特性与最佳实践》这本书时，做了一些笔记，分享一下，还有几篇会陆续发上来。文中的东西基本都来自书中。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.darkness463.top/2017/03/30/Java-VM-GC/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/&via=http://blog.darkness463.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACI0lEQVR42u3aQZLDIAwF0dz/0p7tbMz0l8hUIZqVK7ENzwuVJPh88Hh+jdr9/JrPEg8ZMmQcy3iW4+0e/ub1LBz2xxpkyJBxAYMsgoTg9WTk/vW8r7/LkCFDRnjNYet7ZMiQIaPPIIvgv8iQIUPGmpEWmWSJtVTy67W4DBkyDmTUGmf/c/2V/Q0ZMmQcxXjCUWv3k6D8NIYMGTJmM3iA40Xm+m3FApUkmjJkyBjK6DTRyCGwtNxNC+N4r1WGDBkHMmpFY62hVguyJCWVIUPGbEba+q8tt7MxGYdaGTJkjGbEtW/YLCMpYxqCZciQcRuDhNGUx8N3q5SVIUPGaAafrJb8dQJ08RPLkCFjHIMUoiSxS99DwmsQgmXIkHEBo9bkio9tlTZQg9MiMmTIGMrgrXkeBGvFbbo9IEOGjNsY/S1GcoAsLWuLZ0ZkyJAxmsG3GFtdvTDtC46syZAh40rGrmfT9hz/NCjgypAhYxAjTe/SspbPVXuzDBky7mGkr+v8mx7vCAKuDBkyhjLixzZtD/CmGwq4MmTIuIyxIQi2nwqKYRkyZAxlPOGoLXpXyvhKlSFDxmgGH7uOedU+QT/plCFDxumMNMiS8Je21Xgp+7oGGTJkXMDggY+ndP0DZBwpQ4YMGWl47ZepvG0nQ4YMGZ3rWrpJyuANAVeGDBkHMnhKR1r8tQMc61m2tdtkyJBxIIOXjjwI8hKXz1g7oiFDhozDGT+ZuiLgXZem8gAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
