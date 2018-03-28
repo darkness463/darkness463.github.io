@@ -31,20 +31,20 @@
 <meta name="keywords" content="Java,GC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【笔记】Java虚拟机(一)-GC">
-<meta property="og:url" content="http://blog.darkness463.top/2017/03/30/Java-VM-GC/index.html">
+<meta property="og:url" content="https://blog.darkness463.top/2017/03/30/Java-VM-GC/index.html">
 <meta property="og:site_name" content="变猴旅程">
 <meta property="og:description" content="很久以前看《深入理解Java虚拟机：JVM高级特性与最佳实践》这本书时，做了一些笔记，分享一下，还有几篇会陆续发上来。文中的东西基本都来自书中。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://blog.darkness463.top/2017/03/30/Java-VM-GC/ReachabilityAnalysis.png">
+<meta property="og:image" content="https://blog.darkness463.top/2017/03/30/Java-VM-GC/ReachabilityAnalysis.png">
 <meta property="og:updated_time" content="2018-03-27T15:30:04.527Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【笔记】Java虚拟机(一)-GC">
 <meta name="twitter:description" content="很久以前看《深入理解Java虚拟机：JVM高级特性与最佳实践》这本书时，做了一些笔记，分享一下，还有几篇会陆续发上来。文中的东西基本都来自书中。">
-<meta name="twitter:image" content="http://blog.darkness463.top/2017/03/30/Java-VM-GC/ReachabilityAnalysis.png">
+<meta name="twitter:image" content="https://blog.darkness463.top/2017/03/30/Java-VM-GC/ReachabilityAnalysis.png">
     
         <link rel="alternate" type="application/atom+xml" title="变猴旅程" href="/atom.xml">
     
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
     <script>window.lazyScripts=[]</script>
 
@@ -383,12 +383,12 @@
 
 
         
-        <span class="post-time"></span>原始链接：<a href="/2017/03/30/Java-VM-GC/" target="_blank" rel="external">http://blog.darkness463.top/2017/03/30/Java-VM-GC/</a>
+        <span class="post-time"></span>原始链接：<a href="/2017/03/30/Java-VM-GC/" target="_blank" rel="external">https://blog.darkness463.top/2017/03/30/Java-VM-GC/</a>
         
     </div>
     
     <footer>
-        <a href="http://blog.darkness463.top">
+        <a href="https://blog.darkness463.top">
             <img src="/img/avatar.png" alt="Darkness463">
             Darkness463
         </a>
@@ -414,7 +414,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/&title=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&pic=http://blog.darkness463.top/img/avatar.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2017/03/30/Java-VM-GC/&title=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -424,22 +424,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/&title=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&source=很久以前看《深入理解Java虚拟机：JVM高级特性与最佳实践》这本书时，做了一些笔记，分享一下，还有几篇会陆续发上来。文中的东西基本都来自书中。" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2017/03/30/Java-VM-GC/&title=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&source=很久以前看《深入理解Java虚拟机：JVM高级特性与最佳实践》这本书时，做了一些笔记，分享一下，还有几篇会陆续发上来。文中的东西基本都来自书中。" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.darkness463.top/2017/03/30/Java-VM-GC/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2017/03/30/Java-VM-GC/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/&via=http://blog.darkness463.top" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&url=https://blog.darkness463.top/2017/03/30/Java-VM-GC/&via=https://blog.darkness463.top" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2017/03/30/Java-VM-GC/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -485,6 +485,30 @@
 
 
 
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "EJ17EMwPSTJUugIxg05Lm2Lh-gzGzoHsz",
+            appKey: "V2Wkeg12C8QRr8dgCI41FRqF",
+            avatar: "identicon",
+            placeholder: "欢迎指正~",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
 
 
 
@@ -560,7 +584,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/&title=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&pic=http://blog.darkness463.top/img/avatar.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2017/03/30/Java-VM-GC/&title=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -570,22 +594,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/&title=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&source=很久以前看《深入理解Java虚拟机：JVM高级特性与最佳实践》这本书时，做了一些笔记，分享一下，还有几篇会陆续发上来。文中的东西基本都来自书中。" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2017/03/30/Java-VM-GC/&title=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&source=很久以前看《深入理解Java虚拟机：JVM高级特性与最佳实践》这本书时，做了一些笔记，分享一下，还有几篇会陆续发上来。文中的东西基本都来自书中。" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.darkness463.top/2017/03/30/Java-VM-GC/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2017/03/30/Java-VM-GC/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/&via=http://blog.darkness463.top" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《【笔记】Java虚拟机(一)-GC》 — 变猴旅程&url=https://blog.darkness463.top/2017/03/30/Java-VM-GC/&via=https://blog.darkness463.top" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.darkness463.top/2017/03/30/Java-VM-GC/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2017/03/30/Java-VM-GC/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -596,7 +620,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACI0lEQVR42u3aQZLDIAwF0dz/0p7tbMz0l8hUIZqVK7ENzwuVJPh88Hh+jdr9/JrPEg8ZMmQcy3iW4+0e/ub1LBz2xxpkyJBxAYMsgoTg9WTk/vW8r7/LkCFDRnjNYet7ZMiQIaPPIIvgv8iQIUPGmpEWmWSJtVTy67W4DBkyDmTUGmf/c/2V/Q0ZMmQcxXjCUWv3k6D8NIYMGTJmM3iA40Xm+m3FApUkmjJkyBjK6DTRyCGwtNxNC+N4r1WGDBkHMmpFY62hVguyJCWVIUPGbEba+q8tt7MxGYdaGTJkjGbEtW/YLCMpYxqCZciQcRuDhNGUx8N3q5SVIUPGaAafrJb8dQJ08RPLkCFjHIMUoiSxS99DwmsQgmXIkHEBo9bkio9tlTZQg9MiMmTIGMrgrXkeBGvFbbo9IEOGjNsY/S1GcoAsLWuLZ0ZkyJAxmsG3GFtdvTDtC46syZAh40rGrmfT9hz/NCjgypAhYxAjTe/SspbPVXuzDBky7mGkr+v8mx7vCAKuDBkyhjLixzZtD/CmGwq4MmTIuIyxIQi2nwqKYRkyZAxlPOGoLXpXyvhKlSFDxmgGH7uOedU+QT/plCFDxumMNMiS8Je21Xgp+7oGGTJkXMDggY+ndP0DZBwpQ4YMGWl47ZepvG0nQ4YMGZ3rWrpJyuANAVeGDBkHMnhKR1r8tQMc61m2tdtkyJBxIIOXjjwI8hKXz1g7oiFDhozDGT+ZuiLgXZem8gAAAABJRU5ErkJggg==" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACMklEQVR42u3ay47CMBBEUf7/pzNbpFGaqmoT4fb1CsGQ+GQk06/XS17X23p/p/70/7r79O46ixcMGDC2ZVzlqm9Qf+sOfLeH+gHVd4EBA8YJDPfS7msd47JhwIABo3MgZsEfDBgwYPQZykFZh49KNgoDBgwYWRK7Ku1UkuEv5uIwYMDYkKFX3Z9//ZX+BgwYMLZiXOZyv5uFlfauYMCAMZqhH3AKxk1ZOwcuDBgwzmHoieWTzUj7HRgwYIxm2MX3Rvm+hrkhpvG7AQMGjM0Z2ThFv3DmYpbVAmHAgLEhozMwkYWJdTKspMEf7ggDBoxxDL1kn6Wgbhrc+g/AgAFjKCMLHN3D1G0tuI8JBgwYsxl6s9AtwClb1At8Hw5uGDBgjGb0q1id0pjSQHXraTBgwJjNUBJI96h1r9zZAwwYMKYy9NZj9pdZMqzv1hi2gAEDxraMrGXoNgyy4Xs76YUBA8YBjH6ZXkluW5O29UOBAQPGaIabFbqXdodf3RENGDBgnMDIhreU72aBpj4gexvhwoAB4wCGflxmjYHOI7M7GzBgwBjE6A9euGGiHbHquTgMGDAGMS5zZcMW7nO1qTBgwBjN6B+ynZQ1K/bpwxkwYMCYxHBLXXoDoH8qGmNkMGDAOICRNTIzXhZKhrk4DBgwDmYom+gEi3YSCwMGDBhROqpsSz+yH/rdgAEDxg8zlCRWaRhktT09eV6Qi8OAAWNDhn5cuiSlXaoHlAuamjBgwNiP8QfYzuTz2WTK0AAAAABJRU5ErkJggg==" alt="微信分享二维码">
 </div>
 
 

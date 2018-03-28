@@ -5,9 +5,9 @@
   <subtitle>从人变猴的历程</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://blog.darkness463.top/"/>
-  <updated>2018-03-27T15:27:42.705Z</updated>
-  <id>http://blog.darkness463.top/</id>
+  <link href="https://blog.darkness463.top/"/>
+  <updated>2018-03-28T02:09:48.674Z</updated>
+  <id>https://blog.darkness463.top/</id>
   
   <author>
     <name>Darkness463</name>
@@ -17,9 +17,29 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Android-ConditionVariable</title>
+    <link href="https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/"/>
+    <id>https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/</id>
+    <published>2018-03-28T02:08:39.000Z</published>
+    <updated>2018-03-28T02:09:48.674Z</updated>
+    
+    <content type="html"><![CDATA[<p>ConditionVariable是Android提供的用于wait和notify的类，与java的wait()和notify()不同的地方在于ConditionVarible可以根据状态决定是否wait。</p><a id="more"></a><h2 id="提供的方法"><a href="#提供的方法" class="headerlink" title="提供的方法"></a>提供的方法</h2><p>ConditionVariable有四个方法：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 释放所以block的线程，且将状态设置为open，如果之后不调用close()，则调用block()不会阻塞。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">open</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 将状态设置为close。之后调用block()将会阻塞。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 如果状态不为open，则阻塞当前线程直到调用open()，否则直接返回。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">block</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 如果状态不为open，则阻塞当前线程直到调用open()或达到timeout时间，否则直接返回。</span></span><br><span class="line"><span class="comment">* 如果是因为open而返回，则返回true，如果是因为超市而返回，则返回false。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">block</span><span class="params">(<span class="keyword">long</span> timeout)</span></span>;</span><br></pre></td></tr></table></figure><h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>ConditionVariable的实现非常简单，根据<code>mCondition</code>变量的值决定当前是open还是close状态，<code>mCondition</code>等于true时为open，false时为close。调用block()时，仅在<code>mCondition</code>等于false时才会调用wait()。</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>ConditionVariable简化了wait()和notify()的编写，如果需要根据情况决定是否wait，可以考虑使用ConditionVariable。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;ConditionVariable是Android提供的用于wait和notify的类，与java的wait()和notify()不同的地方在于ConditionVarible可以根据状态决定是否wait。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Android" scheme="https://blog.darkness463.top/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
     <title>废话几句</title>
-    <link href="http://blog.darkness463.top/2018/03/27/say-something/"/>
-    <id>http://blog.darkness463.top/2018/03/27/say-something/</id>
+    <link href="https://blog.darkness463.top/2018/03/27/say-something/"/>
+    <id>https://blog.darkness463.top/2018/03/27/say-something/</id>
     <published>2018-03-27T15:21:17.000Z</published>
     <updated>2018-03-27T15:27:42.705Z</updated>
     
@@ -36,8 +56,8 @@
   
   <entry>
     <title>【总结】Android辅助功能(一)-AccessibilityEvent的分发</title>
-    <link href="http://blog.darkness463.top/2017/04/17/accessibility-event/"/>
-    <id>http://blog.darkness463.top/2017/04/17/accessibility-event/</id>
+    <link href="https://blog.darkness463.top/2017/04/17/accessibility-event/"/>
+    <id>https://blog.darkness463.top/2017/04/17/accessibility-event/</id>
     <published>2017-04-17T05:41:10.000Z</published>
     <updated>2018-03-27T15:28:41.853Z</updated>
     
@@ -50,16 +70,16 @@
     </summary>
     
     
-      <category term="Android" scheme="http://blog.darkness463.top/tags/Android/"/>
+      <category term="Android" scheme="https://blog.darkness463.top/tags/Android/"/>
     
-      <category term="Accessibility" scheme="http://blog.darkness463.top/tags/Accessibility/"/>
+      <category term="Accessibility" scheme="https://blog.darkness463.top/tags/Accessibility/"/>
     
   </entry>
   
   <entry>
     <title>【笔记】Java虚拟机(一)-GC</title>
-    <link href="http://blog.darkness463.top/2017/03/30/Java-VM-GC/"/>
-    <id>http://blog.darkness463.top/2017/03/30/Java-VM-GC/</id>
+    <link href="https://blog.darkness463.top/2017/03/30/Java-VM-GC/"/>
+    <id>https://blog.darkness463.top/2017/03/30/Java-VM-GC/</id>
     <published>2017-03-30T07:00:00.000Z</published>
     <updated>2018-03-27T15:30:04.527Z</updated>
     
@@ -72,9 +92,9 @@
     </summary>
     
     
-      <category term="Java" scheme="http://blog.darkness463.top/tags/Java/"/>
+      <category term="Java" scheme="https://blog.darkness463.top/tags/Java/"/>
     
-      <category term="GC" scheme="http://blog.darkness463.top/tags/GC/"/>
+      <category term="GC" scheme="https://blog.darkness463.top/tags/GC/"/>
     
   </entry>
   

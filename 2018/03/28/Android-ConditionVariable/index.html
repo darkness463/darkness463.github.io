@@ -17,27 +17,28 @@
     <meta charset="utf-8">
     
     
-    <link rel="canonical" href="https://blog.darkness463.top/2018/03/27/say-something/">
+    <link rel="canonical" href="https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/">
     
     
-    <title>废话几句 | 变猴旅程 | 从人变猴的历程</title>
+    <title>Android-ConditionVariable | 变猴旅程 | 从人变猴的历程</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="">
-    <meta name="description" content="全是废话">
+    <meta name="keywords" content="Android">
+    <meta name="description" content="ConditionVariable是Android提供的用于wait和notify的类，与java的wait()和notify()不同的地方在于ConditionVarible可以根据状态决定是否wait。">
+<meta name="keywords" content="Android">
 <meta property="og:type" content="article">
-<meta property="og:title" content="废话几句">
-<meta property="og:url" content="https://blog.darkness463.top/2018/03/27/say-something/index.html">
+<meta property="og:title" content="Android-ConditionVariable">
+<meta property="og:url" content="https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/index.html">
 <meta property="og:site_name" content="变猴旅程">
-<meta property="og:description" content="全是废话">
+<meta property="og:description" content="ConditionVariable是Android提供的用于wait和notify的类，与java的wait()和notify()不同的地方在于ConditionVarible可以根据状态决定是否wait。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-27T15:27:42.705Z">
+<meta property="og:updated_time" content="2018-03-28T02:09:48.674Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="废话几句">
-<meta name="twitter:description" content="全是废话">
+<meta name="twitter:title" content="Android-ConditionVariable">
+<meta name="twitter:description" content="ConditionVariable是Android提供的用于wait和notify的类，与java的wait()和notify()不同的地方在于ConditionVarible可以根据状态决定是否wait。">
     
         <link rel="alternate" type="application/atom+xml" title="变猴旅程" href="/atom.xml">
     
@@ -118,7 +119,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">废话几句</div>
+        <div class="flex-col header-title ellipsis">Android-ConditionVariable</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -140,11 +141,11 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">废话几句</h1>
+        <h1 class="title">Android-ConditionVariable</h1>
         <h5 class="subtitle">
             
-                <time datetime="2018-03-27T15:21:17.000Z" itemprop="datePublished" class="page-time">
-  2018-03-27
+                <time datetime="2018-03-28T02:08:39.000Z" itemprop="datePublished" class="page-time">
+  2018-03-28
 </time>
 
 
@@ -160,14 +161,21 @@
 
 <div class="container body-wrap">
     
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#提供的方法"><span class="post-toc-number">1.</span> <span class="post-toc-text">提供的方法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现"><span class="post-toc-number">2.</span> <span class="post-toc-text">实现</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">3.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
 
-<article id="post-say-something"
+
+<article id="post-Android-ConditionVariable"
   class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">废话几句</h1>
+        <h1 class="post-card-title">Android-ConditionVariable</h1>
         <div class="post-meta">
-            <time class="post-time" title="2018-03-27 23:21:17" datetime="2018-03-27T15:21:17.000Z"  itemprop="datePublished">2018-03-27</time>
+            <time class="post-time" title="2018-03-28 10:08:39" datetime="2018-03-28T02:08:39.000Z"  itemprop="datePublished">2018-03-28</time>
 
             
 
@@ -180,12 +188,12 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p><em>全是废话</em></p>
+            <p>ConditionVariable是Android提供的用于wait和notify的类，与java的wait()和notify()不同的地方在于ConditionVarible可以根据状态决定是否wait。</p>
 <a id="more"></a>
-<p>当初在Github上搭了这个站之后就几乎没发过什么东西，后来买了一个域名也没有鸟过了。</p>
-<p>这两天看到了由<a href="https://github.com/yscoder" target="_blank" rel="noopener">yscoder</a>开源的hexo主题<a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank" rel="noopener">hexo-theme-indigo</a>，挺好看的，于是把之前的推倒重来了。</p>
-<p>之前的几篇东西受限于当时知识的有限，有一些不太对的地方，但是懒得改了，所以也就不放上来了，只把几篇总结笔记类的改了格式传上来了。</p>
-<p>之后多写点东西吧(大概吧)。</p>
+<h2 id="提供的方法"><a href="#提供的方法" class="headerlink" title="提供的方法"></a>提供的方法</h2><p>ConditionVariable有四个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 释放所以block的线程，且将状态设置为open，如果之后不调用close()，则调用block()不会阻塞。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">open</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 将状态设置为close。之后调用block()将会阻塞。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 如果状态不为open，则阻塞当前线程直到调用open()，否则直接返回。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">block</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 如果状态不为open，则阻塞当前线程直到调用open()或达到timeout时间，否则直接返回。</span></span><br><span class="line"><span class="comment">* 如果是因为open而返回，则返回true，如果是因为超市而返回，则返回false。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">block</span><span class="params">(<span class="keyword">long</span> timeout)</span></span>;</span><br></pre></td></tr></table></figure>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>ConditionVariable的实现非常简单，根据<code>mCondition</code>变量的值决定当前是open还是close状态，<code>mCondition</code>等于true时为open，false时为close。调用block()时，仅在<code>mCondition</code>等于false时才会调用wait()。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>ConditionVariable简化了wait()和notify()的编写，如果需要根据情况决定是否wait，可以考虑使用ConditionVariable。</p>
 
         </div>
 
@@ -194,12 +202,12 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-03-27T15:27:42.705Z" itemprop="dateUpdated">2018-03-27 23:27:42</time>
+    最后更新时间：<time datetime="2018-03-28T02:09:48.674Z" itemprop="dateUpdated">2018-03-28 10:09:48</time>
 </span><br>
 
 
         
-        <span class="post-time"></span>原始链接：<a href="/2018/03/27/say-something/" target="_blank" rel="external">https://blog.darkness463.top/2018/03/27/say-something/</a>
+        <span class="post-time"></span>原始链接：<a href="/2018/03/28/Android-ConditionVariable/" target="_blank" rel="external">https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/</a>
         
     </div>
     
@@ -220,6 +228,8 @@
 
         <div class="post-footer">
             
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+
 
             
 <div class="page-share-wrap">
@@ -228,7 +238,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2018/03/27/say-something/&title=《废话几句》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/&title=《Android-ConditionVariable》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -238,22 +248,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2018/03/27/say-something/&title=《废话几句》 — 变猴旅程&source=全是废话" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/&title=《Android-ConditionVariable》 — 变猴旅程&source=ConditionVariable是Android提供的用于wait和notify的类，与java的wait()和notify()不同的地方在于Condi..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2018/03/27/say-something/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《废话几句》 — 变猴旅程&url=https://blog.darkness463.top/2018/03/27/say-something/&via=https://blog.darkness463.top" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android-ConditionVariable》 — 变猴旅程&url=https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/&via=https://blog.darkness463.top" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2018/03/27/say-something/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -273,21 +283,14 @@
     </div>
 
     
-<nav class="post-nav flex-row flex-justify-between">
-  
-    <div class="waves-block waves-effect prev">
-      <a href="/2018/03/28/Android-ConditionVariable/" id="post-prev" class="post-nav-link">
-        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">Android-ConditionVariable</h4>
-      </a>
-    </div>
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
   
 
   
     <div class="waves-block waves-effect next">
-      <a href="/2017/04/17/accessibility-event/" id="post-next" class="post-nav-link">
+      <a href="/2018/03/27/say-something/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">【总结】Android辅助功能(一)-AccessibilityEvent的分发</h4>
+        <h4 class="title">废话几句</h4>
       </a>
     </div>
   
@@ -405,7 +408,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2018/03/27/say-something/&title=《废话几句》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/&title=《Android-ConditionVariable》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -415,22 +418,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2018/03/27/say-something/&title=《废话几句》 — 变猴旅程&source=全是废话" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/&title=《Android-ConditionVariable》 — 变猴旅程&source=ConditionVariable是Android提供的用于wait和notify的类，与java的wait()和notify()不同的地方在于Condi..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2018/03/27/say-something/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《废话几句》 — 变猴旅程&url=https://blog.darkness463.top/2018/03/27/say-something/&via=https://blog.darkness463.top" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android-ConditionVariable》 — 变猴旅程&url=https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/&via=https://blog.darkness463.top" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2018/03/27/say-something/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2018/03/28/Android-ConditionVariable/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -441,7 +444,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACM0lEQVR42u3aQW7DMAwFUd//0u42QCB7PukUMDVaGakj6WXBUiKPA4/za3x+Tt5ffev7eTXnA0OGDBmvZZyXI90WWYX/NGRvMmTI2IexWpg/k+3yMM33JkOGDBn9Z5JiypAhQ8azjDSwXieOndAsQ4aM3Rj9YyoBk1D787O4DBkyXshIN/efzz+pb8iQIeNVjDMc/OI+TQ07Q4YMGbMZnQJkGprRQbSzHxkyZAxlpME0vSZLL+yu31x+IkOGjA0YnNRpqqj9Fb0vQ4aM0Qx+KOVhl1/386JCnOHKkCFjECMtW9ZCJEk305R0meHKkCFjHIOnev2r/7Q5o3aFJ0OGjKkMPlFa5iTgtNlrSZIhQ8ZQRqeFgqd0HFP7ZyBDhowdGDzY8au0NHSmrRg3Z3EZMmSMY5AtdgoGtQQ0aBSTIUPGBgxeUExbKNK1eAhepoYyZMjYgMHLlmnA7aSDN+/LkCFjNINcn/HASo61aZNZUEiQIUPGaEaa9nUKmUFlFRQGgjqnDBkyXs7goZC/w8sJ6Y9ykxrKkCFjNIMnfGkxoNZAxp9lyJCxD+OpZotawwRfffktGTJkDGV02inIQZcXA66PyjfzyJAhYzSjFl5raWX/Ai6dR4YMGZMYtasuniamv1wt0MuQIWMHRi3w1cJr/xArQ4YMGTwtS4NyP608+AIyZMjYmMFLj7ylLD0qPxBwZciQ8UJGbYHrGWppJZ9HhgwZ+zDSFgcecDm1dnCVIUPGBow/MTQZBkLim8cAAAAASUVORK5CYII=" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACr0lEQVR42u3aQW7DMAwEQP//0+m1QGp7SUpxCoxPRdvIGh9MZqnjiK/Xr+v992c/n/2mer2vv/jCw8PDG2z9eun8ZqtW6D0sPDw8vM/wkhtUS8X1Vq4ZyX9e7xkPDw/vm3lJGTj7VLU3xsPDw/u/vDyS6K32cGHAw8PDC3i9xjdpspNNJ7HC9qwFDw8PL+ZN2tmnft4y38PDw8MbT9Xz13SvPCSPcnLsAA8PD28HL3/h5g1xPvjPwb194uHh4e3jzUOBJDIox6/B1gtFCw8PD28pL2+X81A1aZGTred/LdQTPDw8vAFv0uxORmW9QlI+yIWHh4e3mZcM4Cev715BqobIzW8JeHh4eMU5e9IQV2OFhN27Y/noFR4eHt5SXrUw5EVicmCrd9xqlEzj4eHhFXkJtTcSq642P+b1R2HAw8PDW8qbhwifOTpQfaDNCoaHh4c35vVGXEm4MImMyw8LDw8Pbykvf8X3mtpe810NHU4/i4eHh7eNNzlcldwsZ+cFqXnoCg8PD2/My8PQfLi1tjBMIl08PDy8Hbz8NZ2TjuCaHE3IIxI8PDy8z/CqLe+O1nyyfjkJxsPDw2vxeqFA+WbFx9crIX9kLXh4eHibeb0BWP7qz0tRHkbcRLd4eHh4S3k7ItS1D6gahdxM+fDw8PC28VaBe6OvarmKqh8eHh7eNt7kKEBvPDYvBlEkgYeHh7eBtzZOrTbQvRa8PAbDw8PDG/Nexas3yqqO0KqHD07/ioeHh7eBV33hzg8KVNv36wijVzzw8PDw5rzq0r0m+7HCgIeHh7eNl4+sqoUkWWdSu24eEB4eHt7X8KojsV5IUd3bTUqNh4eH9xCvGi70tvVqXUdec/Dw8PDGvN7IKikYCbsXc0SjLzw8PLwNvMkX/l4UmzfQa2NlPDw8vDHvBzJEkpef4v9WAAAAAElFTkSuQmCC" alt="微信分享二维码">
 </div>
 
 
