@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?d5cc253e5cbdd2683026f50541666cc0"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/">
+    
+    
+    <title>Android-Virtual-Check | 变猴旅程 | 从人变猴的历程</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android">
+    <meta name="description" content="多开/分身原本用于方便有多个微信/QQ解决同时登录的问题，但近来年被各种黑产所利用，多见于薅羊毛，部分多开App甚至提供了篡改功能。对于普通用户根本不会有多开的需求的App，一旦检测到当前运行在多开环境下，有理由限制该用户的后续行为。 在尝试了目前市面上多款多开App后，总结了几种检测方案。">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-Virtual-Check">
+<meta property="og:url" content="https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/index.html">
+<meta property="og:site_name" content="变猴旅程">
+<meta property="og:description" content="多开/分身原本用于方便有多个微信/QQ解决同时登录的问题，但近来年被各种黑产所利用，多见于薅羊毛，部分多开App甚至提供了篡改功能。对于普通用户根本不会有多开的需求的App，一旦检测到当前运行在多开环境下，有理由限制该用户的后续行为。 在尝试了目前市面上多款多开App后，总结了几种检测方案。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-04T09:01:03.351Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android-Virtual-Check">
+<meta name="twitter:description" content="多开/分身原本用于方便有多个微信/QQ解决同时登录的问题，但近来年被各种黑产所利用，多见于薅羊毛，部分多开App甚至提供了篡改功能。对于普通用户根本不会有多开的需求的App，一旦检测到当前运行在多开环境下，有理由限制该用户的后续行为。 在尝试了目前市面上多款多开App后，总结了几种检测方案。">
+    
+        <link rel="alternate" type="application/atom+xml" title="变猴旅程" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Darkness463</h5>
+          <a href="mailto:darkness463@gmail.com" title="darkness463@gmail.com" class="mail">darkness463@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/darkness463" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/darkness463" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Android-Virtual-Check</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Android-Virtual-Check</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-04T08:59:34.000Z" itemprop="datePublished" class="page-time">
+  2018-05-04
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#多开原理"><span class="post-toc-number">1.</span> <span class="post-toc-text">多开原理</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#检测方案"><span class="post-toc-number">2.</span> <span class="post-toc-text">检测方案</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#检测files目录路径"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">检测files目录路径</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ps检测"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">ps检测</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#应用列表检测"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">应用列表检测</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#maps检测"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">maps检测</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#总结"><span class="post-toc-number">3.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Android-Virtual-Check"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Android-Virtual-Check</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-04 16:59:34" datetime="2018-05-04T08:59:34.000Z"  itemprop="datePublished">2018-05-04</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>多开/分身原本用于方便有多个微信/QQ解决同时登录的问题，但近来年被各种黑产所利用，多见于薅羊毛，部分多开App甚至提供了篡改功能。对于普通用户根本不会有多开的需求的App，一旦检测到当前运行在多开环境下，有理由限制该用户的后续行为。</p>
+<p>在尝试了目前市面上多款多开App后，总结了几种检测方案。</p>
+<a id="more"></a>
+<h1 id="多开原理"><a href="#多开原理" class="headerlink" title="多开原理"></a>多开原理</h1><p>目前市面上的多开App的原理类似，都是以新进程运行被多开的App，并hook各类系统函数，使被多开的App认为自己是一个正常的App在运行。</p>
+<p>从形式上来说多开App有2种形式，一种是从多开App中直接加载被多开的App，如平行空间、VirtualApp等，另一种是让用户新安装一个App，但这个App本质上就是一个壳，用来加载被多开的App，其原理和前一种是一样的，市面上多开分身这款App是用的这种形式，用户每分身一个App需新安装一个包名为dkmodel.xxx.xxx的App。</p>
+<h1 id="检测方案"><a href="#检测方案" class="headerlink" title="检测方案"></a>检测方案</h1><h2 id="检测files目录路径"><a href="#检测files目录路径" class="headerlink" title="检测files目录路径"></a>检测files目录路径</h2><p>我们知道App的私有目录是<code>/data/data/包名/</code>或<code>/data/user/用户号/包名</code>，通过<code>Context.getFilesDir()</code>方法可以拿到私有目录下的<code>files</code>目录。在多开环境下，获取到目录会变为<code>/data/data/多开App的包名/xxxxxxxx</code>或<code>/data/user/用户号/多开App的包名/xxxxxxxx</code>。</p>
+<p>举个例子，在我手机上，正常使用App上面的代码获取到的路径为<code>/data/user/0/top.darkness463.virtualcheck/files</code>。在多开分身的多开环境下，路径为<code>/data/user/0/dkmodel.zom.rxo/virtual/data/user/0/top.darkness463.virtualcheck/files</code>。</p>
+<p>当然，多开软件是可以hook处理让你拿到正常的目录，但截至写这篇文章为止，市面上大部分多开App没有绕过这项检测，仅有360家的分身大师可以绕过。</p>
+<h2 id="ps检测"><a href="#ps检测" class="headerlink" title="ps检测"></a>ps检测</h2><p>这种检测方法见<a href="https://www.jianshu.com/p/216d65d9971e" target="_blank" rel="noopener">这篇文章</a>。这里就不重复了，我简单说一下原理。</p>
+<p>我们先通过执行<code>ps</code>命令并以自己的uid进行过滤，得到类似下面的结果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 正常情况下</span><br><span class="line">u0_a148 8162 423 1806036 56368 SyS_epoll+ 0 S top.darkness463.virtualcheck</span><br><span class="line"></span><br><span class="line">// 多开环境下</span><br><span class="line">u0_a155 19752 422 4437612 62752 SyS_epoll+ 0 S top.darkness463.virtualcheck</span><br><span class="line">u0_a155 19758 422 564234 54356 SyS_epoll+ 0 S com.lbe.parallel</span><br><span class="line">u0_a155 19747 422 734562 24542 SyS_epoll+ 0 S com.lbe.parallel:mdserver</span><br></pre></td></tr></table></figure>
+<p>可以看到在多开环境下，会获取到自己的包名和多开App的包名这2个包名，通过这些包名去<code>/data/data/</code>下找会找到2个目录，而正常情况下只能在<code>/data/data/</code>下找到自己的App的目录。</p>
+<p>具体的实现原文已经贴了，这里也不重复了。目前未发现有多开App能绕过该项检测，但在Google Pixel Android 8.0下执行ps获取不到进程信息，在Android 8.1的类AOSP rom下都能正常获取，不知道那个手机什么情况。</p>
+<h2 id="应用列表检测"><a href="#应用列表检测" class="headerlink" title="应用列表检测"></a>应用列表检测</h2><p>这里的应用列表检测不是指简单的遍历应用列表判断是不是安装了多开App，我们并不阻止用户安装多开App并多开其他App，我们只是不希望用户多开我们自己的App，因此不能检测到用户安装了多开App就把他干掉。</p>
+<p>多开App都会对<code>context.getPackageName()</code>进行处理，让这个方法返回原始App的包名，因此在被多开的App看来，多开App的包名和原始的那个App的包名一样，因此在多开环境下遍历应用列表时会发现包名等于原始App的包名的应用会有两个。</p>
+<p>代码如下。只对部分多开App有效，例如360的分身大师，不少多开App会绕过这项检测。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">checkPkg</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (context == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">        String packageName = context.getPackageName();</span><br><span class="line">        PackageManager pm = context.getPackageManager();</span><br><span class="line">        List&lt;PackageInfo&gt; pkgs = pm.getInstalledPackages(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span> (PackageInfo info : pkgs) &#123;</span><br><span class="line">            <span class="keyword">if</span> (packageName.equals(info.packageName)) &#123;</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count &gt; <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception ignore) &#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="maps检测"><a href="#maps检测" class="headerlink" title="maps检测"></a>maps检测</h2><p>读取<code>/proc/self/maps</code>，多开App会加载一些自己的so到内存空间，举个例子，360的分身大师加载了其目录下的某个so，<code>/data/app/com.qihoo.magic-gdEsg8KRAuJy0MuY18BlqQ==/lib/arm/libbreakpad-jni-1.5.so</code>，通过对各种多开App的包名的匹配，如果maps中有多开App的包名的东西，那么当前就是运行在多开环境下。</p>
+<p>目前没有发现多开App绕过该项检测，但缺点是需要收集所有多开App的包名，一旦多开App改个包名就失效了。</p>
+<p>伪代码如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Set&lt;String&gt; virtualPkgs;  <span class="comment">// 多开App包名列表</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">check</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    BufferedReader bufr = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        bufr = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> FileReader(<span class="string">"/proc/self/maps"</span>));</span><br><span class="line">        String line;</span><br><span class="line">        <span class="keyword">while</span> ((line = bufr.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (String pkg : virtualPkgs) &#123;</span><br><span class="line">                <span class="keyword">if</span> (line.contains(pkg)) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception ignore) &#123;</span><br><span class="line">        </span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (bufr != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                bufr.close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这些方法有的已经被部分多开App绕过了，有的暂时还未绕过，建议所有的检测都加上，而且可以Java层和C层都进行检测。当然，与黑产斗争的道路我们永远处于劣势。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-05-04T09:01:03.351Z" itemprop="dateUpdated">2018-05-04 17:01:03</time>
+</span><br>
+
+
+        
+        <span class="post-time"></span>原始链接：<a href="/2018/05/04/Android-Virtual-Check/" target="_blank" rel="external">https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.darkness463.top">
+            <img src="/img/avatar.png" alt="Darkness463">
+            Darkness463
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/&title=《Android-Virtual-Check》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/&title=《Android-Virtual-Check》 — 变猴旅程&source=多开/分身原本用于方便有多个微信/QQ解决同时登录的问题，但近来年被各种黑产所利用，多见于薅羊毛，部分多开App甚至提供了篡改功能。对于普通用户根本不会有..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android-Virtual-Check》 — 变猴旅程&url=https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/&via=https://blog.darkness463.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/04/10/All-in-One-Once/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">【All in One】Once</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "EJ17EMwPSTJUugIxg05Lm2Lh-gzGzoHsz",
+            appKey: "V2Wkeg12C8QRr8dgCI41FRqF",
+            avatar: "identicon",
+            placeholder: "欢迎指正~",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <!-- 
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span> -->
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Darkness463 &copy; 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/&title=《Android-Virtual-Check》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/&title=《Android-Virtual-Check》 — 变猴旅程&source=多开/分身原本用于方便有多个微信/QQ解决同时登录的问题，但近来年被各种黑产所利用，多见于薅羊毛，部分多开App甚至提供了篡改功能。对于普通用户根本不会有..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android-Virtual-Check》 — 变猴旅程&url=https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/&via=https://blog.darkness463.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACPElEQVR42u3a0W7DIBBEUf//T7uvrSKTOwuuxHL9FFkO4bjSFNi9LnzdH9fv++T5z2+N719vXDJkyNiWcQ+v8Q/wO+NXMP48npsMGTLOYTwlGBmaP89jms9NhgwZMmpTJJGd/q4MGTJkpMORBdx4/PloliFDxmkMPpXxZpJsYslLeXEvLkOGjA0Z/NT9/z+/Ut+QIUPGVow7vObDcSagH0eWIUNGawYPuNq00iVgbT4yZMjozUgbLNImDLJxnWngiHvQZMiQsSGjFqx8k8kDOi15fjl0kyFDRlMGL2Sm0VlrCxu/bxkyZJzGSJdxqyKyVqqMK7EyZMjYnDGeShqXaWtXGuioIUyGDBlNGekRGJ9WbbMat3rIkCGjNYPHJb9PYMG6NSxIyJAhox+DlwanTvJK0RkftMmQIaM1o1awTCO42LP2dmuFDBkyNmTwqfD15nth/WdpKEOGjNaMmQAlMc2XgLzh7PHUUIYMGU0ZtYOztPFiJqa/xLcMGTJaM9LiIi8SzDdb8JYyGTJknMPgm0k+NA9cfv9xfBkyZBzA4DHKF5TkeR6sC/5vyJAhowUj3UDyw7i0DMCbzGTIkNGbsSpSeamyFvTB30GGDBntGGnM8eVdGtC8pWMqsmXIkLEtY+1Wc34hmG6PZciQcQ6DB18axLUSQoyUIUOGjFLDBD84Sw/sguNEGTJkHMwg36qVM3nTxoLAlSFDxlaMdJHH47JWJEg30jJkyOjNSNddpM0i3e7WflGGDBkHMH4AOrrwLnNx9XwAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
