@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?d5cc253e5cbdd2683026f50541666cc0"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="https://blog.darkness463.top/2018/06/20/Xposed-Check/">
+    
+    
+    <title>聊聊Xposed检测 | 变猴旅程 | 从人变猴的历程</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android,Xposed">
+    <meta name="description" content="这两天看到有部分人称微信大规模封号，主要被封的是Xposed和各类微信插件的使用者，部分人说自己只是安装了Xposed，但并未使用微信相关的任何插件也被封了。由此有人开始说微信侵犯用户隐私，随意扫描用户的手机等等。 本人一直是Xposed的使用者，主要是用来使用自己写的扒Android8.1上“吉字节”等单位改回“GB”的插件。另外也有使用修改微信UI以及防撤回的与微信相关的插件，但并未受到此次封">
+<meta name="keywords" content="Android,Xposed">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊Xposed检测">
+<meta property="og:url" content="https://blog.darkness463.top/2018/06/20/Xposed-Check/index.html">
+<meta property="og:site_name" content="变猴旅程">
+<meta property="og:description" content="这两天看到有部分人称微信大规模封号，主要被封的是Xposed和各类微信插件的使用者，部分人说自己只是安装了Xposed，但并未使用微信相关的任何插件也被封了。由此有人开始说微信侵犯用户隐私，随意扫描用户的手机等等。 本人一直是Xposed的使用者，主要是用来使用自己写的扒Android8.1上“吉字节”等单位改回“GB”的插件。另外也有使用修改微信UI以及防撤回的与微信相关的插件，但并未受到此次封">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-06-20T07:59:21.202Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="聊聊Xposed检测">
+<meta name="twitter:description" content="这两天看到有部分人称微信大规模封号，主要被封的是Xposed和各类微信插件的使用者，部分人说自己只是安装了Xposed，但并未使用微信相关的任何插件也被封了。由此有人开始说微信侵犯用户隐私，随意扫描用户的手机等等。 本人一直是Xposed的使用者，主要是用来使用自己写的扒Android8.1上“吉字节”等单位改回“GB”的插件。另外也有使用修改微信UI以及防撤回的与微信相关的插件，但并未受到此次封">
+    
+        <link rel="alternate" type="application/atom+xml" title="变猴旅程" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Darkness463</h5>
+          <a href="mailto:darkness463@gmail.com" title="darkness463@gmail.com" class="mail">darkness463@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/darkness463" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/darkness463" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">聊聊Xposed检测</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">聊聊Xposed检测</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-06-20T07:57:49.000Z" itemprop="datePublished" class="page-time">
+  2018-06-20
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#检测"><span class="post-toc-number">1.</span> <span class="post-toc-text">检测</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Xposed-Installer"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Xposed Installer</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#堆栈信息"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">堆栈信息</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#maps"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">maps</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#更精准的检测"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">更精准的检测</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#反检测与反反检测"><span class="post-toc-number">2.</span> <span class="post-toc-text">反检测与反反检测</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#结语"><span class="post-toc-number">3.</span> <span class="post-toc-text">结语</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Xposed-Check"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">聊聊Xposed检测</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-06-20 15:57:49" datetime="2018-06-20T07:57:49.000Z"  itemprop="datePublished">2018-06-20</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>这两天看到有部分人称微信大规模封号，主要被封的是Xposed和各类微信插件的使用者，部分人说自己只是安装了Xposed，但并未使用微信相关的任何插件也被封了。由此有人开始说微信侵犯用户隐私，随意扫描用户的手机等等。</p>
+<p>本人一直是Xposed的使用者，主要是用来使用自己写的扒Android8.1上“吉字节”等单位改回“GB”的插件。另外也有使用修改微信UI以及防撤回的与微信相关的插件，但并未受到此次封号的影响。普通用户不太清楚开发方面的事，以为检测Xposed框架是件很复杂的事，今天就来聊聊Xposed的简单检测方法。</p>
+<a id="more"></a>
+<h1 id="检测"><a href="#检测" class="headerlink" title="检测"></a>检测</h1><p>Xposed重写了zygote，zygote启动时会加载Xposed相关组件，因此由zygote孵化出来的每个进程都会有Xposed的相关代码。根据这一原理，我们可以通过以下几种方式检测。</p>
+<h2 id="Xposed-Installer"><a href="#Xposed-Installer" class="headerlink" title="Xposed Installer"></a>Xposed Installer</h2><p>Xposed利用Xposed Installer这一App安装Xposed和管理模块，其包名为<code>de.robv.android.xposed.installer</code>，检测这一包名是最简单直观的对Xposed检测的方法。</p>
+<h2 id="堆栈信息"><a href="#堆栈信息" class="headerlink" title="堆栈信息"></a>堆栈信息</h2><p>抛出一个异常并捕获，将堆栈信息打印出来。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .....省略部分</span></span><br><span class="line">at android.os.Handler.dispatchMessage(Handler.java:<span class="number">106</span>)</span><br><span class="line">at android.os.Looper.loop(Looper.java:<span class="number">164</span>)</span><br><span class="line">at android.app.ActivityThread.main(ActivityThread.java:<span class="number">6494</span>)</span><br><span class="line">at java.lang.reflect.Method.invoke(Native Method)</span><br><span class="line">at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:<span class="number">440</span>)</span><br><span class="line">at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:<span class="number">807</span>)</span><br><span class="line">at de.robv.android.xposed.XposedBridge.main(XposedBridge.java:<span class="number">108</span>)</span><br></pre></td></tr></table></figure>
+<p>可以看到每个App是先执行的XposedBridge.jar的main方法，之后再调用的Zygote的main方法。通过检测堆栈中是否包含<code>Xposed</code>等字样即可知道是否安装了Xposed。</p>
+<h2 id="maps"><a href="#maps" class="headerlink" title="maps"></a>maps</h2><p>Xposed的组件需要被加载，必然在内存空间留下痕迹。通过遍历<code>/proc/&lt;pid&gt;/maps</code>（<code>/proc/self/maps</code>）的内容可以发现如下内容。因此也可以据此来判断。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">7</span>de6c41000-<span class="number">7</span>de6c42000 r--s <span class="number">00019000</span> b3:<span class="number">18</span> <span class="number">139265</span> /system/framework/XposedBridge.jar</span><br></pre></td></tr></table></figure>
+<h2 id="更精准的检测"><a href="#更精准的检测" class="headerlink" title="更精准的检测"></a>更精准的检测</h2><p>以上方法只能检测用户是否安装使用了Xposed，这是一个风险点，但我们并不能因为用户使用了Xposed就将其封禁。通过Xposed的实现方式，我们可以采取更精准的方式去检测。</p>
+<p>在<code>de.robv.android.xposed.XposedBridge</code>中有一个<code>disableHooks</code>字段用于标记对于当前应用是否要进行hook。通过获取这个字段的值就可以知道是否在我们App上启用hook了，甚至可以通过将其设置为true停掉Xposed。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Field disableHooksFiled = ClassLoader.getSystemClassLoader()</span><br><span class="line">        .loadClass(<span class="string">"de.robv.android.xposed.XposedBridge"</span>)</span><br><span class="line">        .getDeclaredField(<span class="string">"disableHooks"</span>);</span><br><span class="line">disableHooksFiled.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">Object enable = disableHooksFiled.get(<span class="keyword">null</span>);  <span class="comment">// 当前状态</span></span><br><span class="line">disableHooksFiled.set(<span class="keyword">null</span>, <span class="keyword">true</span>);            <span class="comment">// 设置为关闭</span></span><br></pre></td></tr></table></figure>
+<p>另一个更为精准的方式见<a href="https://segmentfault.com/a/1190000009976827" target="_blank" rel="noopener">这篇文章</a>，Xposed将需要hook的字段、方法、构造函数等缓存在了几个HashMap中，通过遍历这几个看是否有与自己相关的内容就可知道自己是否有被hook了，具体的原理和方法可以看一下这篇文章。</p>
+<h1 id="反检测与反反检测"><a href="#反检测与反反检测" class="headerlink" title="反检测与反反检测"></a>反检测与反反检测</h1><p>上面提到的那些检测方法实际上都可以被绕过的，hook掉调用的那些检测方法并返回虚假的信息就可以轻松绕过。例如上文提到检测maps文件，那么我们可以需要类似下面这样的伪代码遍历maps文件的每一行并判断是否包含Xposed的相关组件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">line.contains(<span class="string">"Xposed"</span>)</span><br></pre></td></tr></table></figure>
+<p>那么可以hook<code>String.contains</code>方法，如果发现你想判断的内容包含<code>Xposed</code>等关键字就直接返回false即可。</p>
+<p>面对这些反检测的手段，第一我们可以增加检测的维度，加大绕过检测的难度，从Java层和C层进行多方面的检测。第二我们可以设置一些蜜罐，例如面对上面这种反检测的手段，如果我们调用<code>&quot;Xposed&quot;.contains(&quot;Xposed&quot;)</code>的返回值是false，那必然说明其使用了这种反检测手段。</p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>攻防真的很无聊。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-06-20T07:59:21.202Z" itemprop="dateUpdated">2018-06-20 15:59:21</time>
+</span><br>
+
+
+        
+        <span class="post-time"></span>原始链接：<a href="/2018/06/20/Xposed-Check/" target="_blank" rel="external">https://blog.darkness463.top/2018/06/20/Xposed-Check/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.darkness463.top">
+            <img src="/img/avatar.png" alt="Darkness463">
+            Darkness463
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Xposed/">Xposed</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2018/06/20/Xposed-Check/&title=《聊聊Xposed检测》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2018/06/20/Xposed-Check/&title=《聊聊Xposed检测》 — 变猴旅程&source=这两天看到有部分人称微信大规模封号，主要被封的是Xposed和各类微信插件的使用者，部分人说自己只是安装了Xposed，但并未使用微信相关的任何插件也被封..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2018/06/20/Xposed-Check/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《聊聊Xposed检测》 — 变猴旅程&url=https://blog.darkness463.top/2018/06/20/Xposed-Check/&via=https://blog.darkness463.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2018/06/20/Xposed-Check/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/05/04/Android-Virtual-Check/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Android多开/分身检测</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "EJ17EMwPSTJUugIxg05Lm2Lh-gzGzoHsz",
+            appKey: "V2Wkeg12C8QRr8dgCI41FRqF",
+            avatar: "identicon",
+            placeholder: "欢迎指正~",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <!-- 
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span> -->
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Darkness463 &copy; 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2018/06/20/Xposed-Check/&title=《聊聊Xposed检测》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2018/06/20/Xposed-Check/&title=《聊聊Xposed检测》 — 变猴旅程&source=这两天看到有部分人称微信大规模封号，主要被封的是Xposed和各类微信插件的使用者，部分人说自己只是安装了Xposed，但并未使用微信相关的任何插件也被封..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2018/06/20/Xposed-Check/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《聊聊Xposed检测》 — 变猴旅程&url=https://blog.darkness463.top/2018/06/20/Xposed-Check/&via=https://blog.darkness463.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2018/06/20/Xposed-Check/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACK0lEQVR42u3aS47DIBBFUe9/0+5ppMjkvgK3RHE9ihLH5jAo1YfrwteNr+/7P78hnz+/WXzJkCFjW8aqZY0XQX4lT358jgwZMg5g8Efz15MtGFPJe2XIkCHj6Z5xUCaBe9X2yZAhQ8bae9aGZhkyZJzGIIFy/GjemCP/erEWlyFDxoYM3nX//8+vzDdkyJCxFeMOr3GLnwTrtDxGq5IhQ0ZrBg9w80leLYiT9ciQIaM3o9a+f3sYGX8jQ4aM1oxaKVtbYhqm+UE0GTJknMDg5WgaWGuHydIEVIYMGb0ZgTU8nDHTPiOJKarCZciQ0YKRNu7fyEP5yOFH+SpDhozWDJKWpeNMHsTTw14/SDJkyGjHqDXu0/Y9b+unYwYZMmScwJh5GS87a0leXGDLkCGjNYMUq7VhZ7pN6YbKkCHjTEZ6nCL9tRhGeSNPhgwZ7Rik+TVeRHogbGY7Hu+XIUNGa8aqRhvJ0F4fJMiQIaM1g5eU4wXNHzKbf5cMGTK6MoJDoiDtI8dPeVAOElMZMmQcwKi170nyR57Pw64MGTJOZgSNrYlitTZ4QGMGGTJkNGXc4cVLynRZtdTw4vmpDBkytmWkw8JaeCVbNt+AkyFDRm8GD7I8WK+NimjYIEOGjAMY6XCxVrjGk1WOlCFDhgzc+uelbDowCPpwMmTIOJ5RW3qtkRekoTJkyDiAMX+EIv0XHxIsbrfJkCFjQ8bMSQ1ejs5jFgw1ZciQsR/jD3bFS6l4VFpCAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

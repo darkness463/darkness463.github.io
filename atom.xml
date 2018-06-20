@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://blog.darkness463.top/"/>
-  <updated>2018-05-04T09:04:17.487Z</updated>
+  <updated>2018-06-20T07:59:21.202Z</updated>
   <id>https://blog.darkness463.top/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>聊聊Xposed检测</title>
+    <link href="https://blog.darkness463.top/2018/06/20/Xposed-Check/"/>
+    <id>https://blog.darkness463.top/2018/06/20/Xposed-Check/</id>
+    <published>2018-06-20T07:57:49.000Z</published>
+    <updated>2018-06-20T07:59:21.202Z</updated>
+    
+    <content type="html"><![CDATA[<p>这两天看到有部分人称微信大规模封号，主要被封的是Xposed和各类微信插件的使用者，部分人说自己只是安装了Xposed，但并未使用微信相关的任何插件也被封了。由此有人开始说微信侵犯用户隐私，随意扫描用户的手机等等。</p><p>本人一直是Xposed的使用者，主要是用来使用自己写的扒Android8.1上“吉字节”等单位改回“GB”的插件。另外也有使用修改微信UI以及防撤回的与微信相关的插件，但并未受到此次封号的影响。普通用户不太清楚开发方面的事，以为检测Xposed框架是件很复杂的事，今天就来聊聊Xposed的简单检测方法。</p><a id="more"></a><h1 id="检测"><a href="#检测" class="headerlink" title="检测"></a>检测</h1><p>Xposed重写了zygote，zygote启动时会加载Xposed相关组件，因此由zygote孵化出来的每个进程都会有Xposed的相关代码。根据这一原理，我们可以通过以下几种方式检测。</p><h2 id="Xposed-Installer"><a href="#Xposed-Installer" class="headerlink" title="Xposed Installer"></a>Xposed Installer</h2><p>Xposed利用Xposed Installer这一App安装Xposed和管理模块，其包名为<code>de.robv.android.xposed.installer</code>，检测这一包名是最简单直观的对Xposed检测的方法。</p><h2 id="堆栈信息"><a href="#堆栈信息" class="headerlink" title="堆栈信息"></a>堆栈信息</h2><p>抛出一个异常并捕获，将堆栈信息打印出来。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .....省略部分</span></span><br><span class="line">at android.os.Handler.dispatchMessage(Handler.java:<span class="number">106</span>)</span><br><span class="line">at android.os.Looper.loop(Looper.java:<span class="number">164</span>)</span><br><span class="line">at android.app.ActivityThread.main(ActivityThread.java:<span class="number">6494</span>)</span><br><span class="line">at java.lang.reflect.Method.invoke(Native Method)</span><br><span class="line">at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:<span class="number">440</span>)</span><br><span class="line">at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:<span class="number">807</span>)</span><br><span class="line">at de.robv.android.xposed.XposedBridge.main(XposedBridge.java:<span class="number">108</span>)</span><br></pre></td></tr></table></figure><p>可以看到每个App是先执行的XposedBridge.jar的main方法，之后再调用的Zygote的main方法。通过检测堆栈中是否包含<code>Xposed</code>等字样即可知道是否安装了Xposed。</p><h2 id="maps"><a href="#maps" class="headerlink" title="maps"></a>maps</h2><p>Xposed的组件需要被加载，必然在内存空间留下痕迹。通过遍历<code>/proc/&lt;pid&gt;/maps</code>（<code>/proc/self/maps</code>）的内容可以发现如下内容。因此也可以据此来判断。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">7</span>de6c41000-<span class="number">7</span>de6c42000 r--s <span class="number">00019000</span> b3:<span class="number">18</span> <span class="number">139265</span> /system/framework/XposedBridge.jar</span><br></pre></td></tr></table></figure><h2 id="更精准的检测"><a href="#更精准的检测" class="headerlink" title="更精准的检测"></a>更精准的检测</h2><p>以上方法只能检测用户是否安装使用了Xposed，这是一个风险点，但我们并不能因为用户使用了Xposed就将其封禁。通过Xposed的实现方式，我们可以采取更精准的方式去检测。</p><p>在<code>de.robv.android.xposed.XposedBridge</code>中有一个<code>disableHooks</code>字段用于标记对于当前应用是否要进行hook。通过获取这个字段的值就可以知道是否在我们App上启用hook了，甚至可以通过将其设置为true停掉Xposed。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Field disableHooksFiled = ClassLoader.getSystemClassLoader()</span><br><span class="line">        .loadClass(<span class="string">"de.robv.android.xposed.XposedBridge"</span>)</span><br><span class="line">        .getDeclaredField(<span class="string">"disableHooks"</span>);</span><br><span class="line">disableHooksFiled.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">Object enable = disableHooksFiled.get(<span class="keyword">null</span>);  <span class="comment">// 当前状态</span></span><br><span class="line">disableHooksFiled.set(<span class="keyword">null</span>, <span class="keyword">true</span>);            <span class="comment">// 设置为关闭</span></span><br></pre></td></tr></table></figure><p>另一个更为精准的方式见<a href="https://segmentfault.com/a/1190000009976827" target="_blank" rel="noopener">这篇文章</a>，Xposed将需要hook的字段、方法、构造函数等缓存在了几个HashMap中，通过遍历这几个看是否有与自己相关的内容就可知道自己是否有被hook了，具体的原理和方法可以看一下这篇文章。</p><h1 id="反检测与反反检测"><a href="#反检测与反反检测" class="headerlink" title="反检测与反反检测"></a>反检测与反反检测</h1><p>上面提到的那些检测方法实际上都可以被绕过的，hook掉调用的那些检测方法并返回虚假的信息就可以轻松绕过。例如上文提到检测maps文件，那么我们可以需要类似下面这样的伪代码遍历maps文件的每一行并判断是否包含Xposed的相关组件。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">line.contains(<span class="string">"Xposed"</span>)</span><br></pre></td></tr></table></figure><p>那么可以hook<code>String.contains</code>方法，如果发现你想判断的内容包含<code>Xposed</code>等关键字就直接返回false即可。</p><p>面对这些反检测的手段，第一我们可以增加检测的维度，加大绕过检测的难度，从Java层和C层进行多方面的检测。第二我们可以设置一些蜜罐，例如面对上面这种反检测的手段，如果我们调用<code>&quot;Xposed&quot;.contains(&quot;Xposed&quot;)</code>的返回值是false，那必然说明其使用了这种反检测手段。</p><h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>攻防真的很无聊。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这两天看到有部分人称微信大规模封号，主要被封的是Xposed和各类微信插件的使用者，部分人说自己只是安装了Xposed，但并未使用微信相关的任何插件也被封了。由此有人开始说微信侵犯用户隐私，随意扫描用户的手机等等。&lt;/p&gt;
+&lt;p&gt;本人一直是Xposed的使用者，主要是用来使用自己写的扒Android8.1上“吉字节”等单位改回“GB”的插件。另外也有使用修改微信UI以及防撤回的与微信相关的插件，但并未受到此次封号的影响。普通用户不太清楚开发方面的事，以为检测Xposed框架是件很复杂的事，今天就来聊聊Xposed的简单检测方法。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Android" scheme="https://blog.darkness463.top/tags/Android/"/>
+    
+      <category term="Xposed" scheme="https://blog.darkness463.top/tags/Xposed/"/>
+    
+  </entry>
   
   <entry>
     <title>Android多开/分身检测</title>
