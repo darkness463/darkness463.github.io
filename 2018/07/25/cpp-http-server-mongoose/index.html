@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?d5cc253e5cbdd2683026f50541666cc0"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="https://blog.darkness463.top/2018/07/25/cpp-http-server-mongoose/">
+    
+    
+    <title>基于mongoose的C++ Http Server的“坑”与“坑” | 变猴旅程 | 从人变猴的历程</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Cpp">
+    <meta name="description" content="最近有个奇葩的需求，需要用C++去实现一个Http Server。用Java或者其他语言去实现Http Server是一件很简单的事，但用C++去实现我就闻所未闻了（当然主要是我也没写过C++嘛）。于是去搜索了一把，不少人推荐mongoose，在实际使用中遇到了不少的坑。">
+<meta name="keywords" content="Cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于mongoose的C++ Http Server的“坑”与“坑”">
+<meta property="og:url" content="https://blog.darkness463.top/2018/07/25/cpp-http-server-mongoose/index.html">
+<meta property="og:site_name" content="变猴旅程">
+<meta property="og:description" content="最近有个奇葩的需求，需要用C++去实现一个Http Server。用Java或者其他语言去实现Http Server是一件很简单的事，但用C++去实现我就闻所未闻了（当然主要是我也没写过C++嘛）。于是去搜索了一把，不少人推荐mongoose，在实际使用中遇到了不少的坑。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-25T09:26:49.765Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于mongoose的C++ Http Server的“坑”与“坑”">
+<meta name="twitter:description" content="最近有个奇葩的需求，需要用C++去实现一个Http Server。用Java或者其他语言去实现Http Server是一件很简单的事，但用C++去实现我就闻所未闻了（当然主要是我也没写过C++嘛）。于是去搜索了一把，不少人推荐mongoose，在实际使用中遇到了不少的坑。">
+    
+        <link rel="alternate" type="application/atom+xml" title="变猴旅程" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Darkness463</h5>
+          <a href="mailto:darkness463@gmail.com" title="darkness463@gmail.com" class="mail">darkness463@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/darkness463" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/darkness463" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">基于mongoose的C++ Http Server的“坑”与“坑”</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">基于mongoose的C++ Http Server的“坑”与“坑”</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-07-25T09:23:07.000Z" itemprop="datePublished" class="page-time">
+  2018-07-25
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#使用方式"><span class="post-toc-number">1.</span> <span class="post-toc-text">使用方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#简单的Web-Server"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">简单的Web Server</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#RESTful-Server"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">RESTful Server</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#请求信息的获取"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">请求信息的获取</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#多线程"><span class="post-toc-number">2.</span> <span class="post-toc-text">多线程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#socket"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">socket</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#工作线程"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">工作线程</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#IO线程（接收请求）"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">IO线程（接收请求）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#IO线程（返回结果）"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">IO线程（返回结果）</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#性能"><span class="post-toc-number">3.</span> <span class="post-toc-text">性能</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#总结"><span class="post-toc-number">4.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-cpp-http-server-mongoose"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">基于mongoose的C++ Http Server的“坑”与“坑”</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-07-25 17:23:07" datetime="2018-07-25T09:23:07.000Z"  itemprop="datePublished">2018-07-25</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>最近有个奇葩的需求，需要用C++去实现一个Http Server。用Java或者其他语言去实现Http Server是一件很简单的事，但用C++去实现我就闻所未闻了（当然主要是我也没写过C++嘛）。于是去搜索了一把，不少人推荐<a href="https://github.com/cesanta/mongoose" target="_blank" rel="noopener">mongoose</a>，在实际使用中遇到了不少的坑。</p>
+<a id="more"></a>
+<h1 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h1><p>使用mongoose只需要将mongoose.h和mongoose.c引入即可。下面通过几个简单的例子了解一下mongoose的使用及工作方式。</p>
+<h2 id="简单的Web-Server"><a href="#简单的Web-Server" class="headerlink" title="简单的Web Server"></a>简单的Web Server</h2><p>这是官方给的<a href="https://github.com/cesanta/mongoose/tree/master/examples/simplest_web_server" target="_blank" rel="noopener">示例</a>。代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mongoose.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> *s_http_port = <span class="string">"8000"</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">mg_serve_http_opts</span> <span class="title">s_http_server_opts</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ev_handler</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> ev, <span class="keyword">void</span> *p)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (ev == MG_EV_HTTP_REQUEST) &#123;</span><br><span class="line">    mg_serve_http(nc, (struct http_message *) p, s_http_server_opts);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_mgr</span> <span class="title">mgr</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_connection</span> *<span class="title">nc</span>;</span></span><br><span class="line"></span><br><span class="line">  mg_mgr_init(&amp;mgr, <span class="literal">NULL</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Starting web server on port %s\n"</span>, s_http_port);</span><br><span class="line">  nc = mg_bind(&amp;mgr, s_http_port, ev_handler);</span><br><span class="line">  <span class="keyword">if</span> (nc == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Failed to create listener\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Set up HTTP server parameters</span></span><br><span class="line">  mg_set_protocol_http_websocket(nc);</span><br><span class="line">  s_http_server_opts.document_root = <span class="string">"."</span>;  <span class="comment">// Serve current directory</span></span><br><span class="line">  s_http_server_opts.enable_directory_listing = <span class="string">"yes"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">    mg_mgr_poll(&amp;mgr, <span class="number">1000</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  mg_mgr_free(&amp;mgr);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中有几个关键的结构体。<br><code>mg_mgr</code>: 用于管理连接、事件等的Manager。<br><code>mg_connection</code>: 单个连接，保存了连接信息。</p>
+<p>从官方给的例子我们可以了解主要用法步骤：</p>
+<ol>
+<li>调用<code>mg_mgr_init</code>进行初始化。</li>
+<li>调用<code>mg_bind</code>，第2个参数为需要监听的端口号，第3个参数为处理请求的handler。</li>
+<li>调用<code>mg_set_protocol_http_websocket</code>将上一步返回的<code>mg_connection</code>与内建的http handler绑定。这样我们的handler才能收到http事件。</li>
+<li>通过一直调用<code>mg_mgr_poll</code>接收请求。</li>
+</ol>
+<p>接下来我们看一下例子中的handler。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ev_handler</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> ev, <span class="keyword">void</span> *p)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (ev == MG_EV_HTTP_REQUEST) &#123;</span><br><span class="line">    mg_serve_http(nc, (struct http_message *) p, s_http_server_opts);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>handler有3个参数，第1个参数是当前连接的<code>mg_connection</code>结构体，第2个参数是事件类型，第3个参数为事件的数据。</p>
+<p>常用事件类型包含以下几种：</p>
+<ul>
+<li><code>MG_EV_ACCEPT</code>: 新连接被接受。</li>
+<li><code>MG_EV_HTTP_REQUEST</code>: 收到http请求，此时第3个参数可以将其强转为<code>http_message</code>结构体使用，包含了method、header、body等等信息。</li>
+<li><code>MG_EV_CLOSE</code>: 连接关闭</li>
+</ul>
+<p>例子中在收到<code>MG_EV_HTTP_REQUEST</code>事件时，调用了<code>mg_serve_http</code>，该方法会根据设置的根路径寻找html等资源。</p>
+<h2 id="RESTful-Server"><a href="#RESTful-Server" class="headerlink" title="RESTful Server"></a>RESTful Server</h2><p>这个<a href="https://github.com/cesanta/mongoose/blob/master/examples/restful_server/restful_server.c" target="_blank" rel="noopener">例子</a>也是来自于官方。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mongoose.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> *s_http_port = <span class="string">"8000"</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">mg_serve_http_opts</span> <span class="title">s_http_server_opts</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">handle_sum_call</span><span class="params">(struct mg_connection *nc, struct http_message *hm)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">char</span> n1[<span class="number">100</span>], n2[<span class="number">100</span>];</span><br><span class="line">  <span class="keyword">double</span> result;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Get form variables */</span></span><br><span class="line">  mg_get_http_var(&amp;hm-&gt;body, <span class="string">"n1"</span>, n1, <span class="keyword">sizeof</span>(n1));</span><br><span class="line">  mg_get_http_var(&amp;hm-&gt;body, <span class="string">"n2"</span>, n2, <span class="keyword">sizeof</span>(n2));</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Send headers */</span></span><br><span class="line">  mg_printf(nc, <span class="string">"%s"</span>, <span class="string">"HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Compute the result and send it back as a JSON object */</span></span><br><span class="line">  result = strtod(n1, <span class="literal">NULL</span>) + strtod(n2, <span class="literal">NULL</span>);</span><br><span class="line">  mg_printf_http_chunk(nc, <span class="string">"&#123; \"result\": %lf &#125;"</span>, result);</span><br><span class="line">  mg_send_http_chunk(nc, <span class="string">""</span>, <span class="number">0</span>); <span class="comment">/* Send empty chunk, the end of response */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ev_handler</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> ev, <span class="keyword">void</span> *ev_data)</span> </span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">http_message</span> *<span class="title">hm</span> = (<span class="title">struct</span> <span class="title">http_message</span> *) <span class="title">ev_data</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">switch</span> (ev) &#123;</span><br><span class="line">    <span class="keyword">case</span> MG_EV_HTTP_REQUEST:</span><br><span class="line">      <span class="keyword">if</span> (mg_vcmp(&amp;hm-&gt;uri, <span class="string">"/api/v1/sum"</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">        handle_sum_call(nc, hm); <span class="comment">/* Handle RESTful call */</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mg_vcmp(&amp;hm-&gt;uri, <span class="string">"/printcontent"</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">char</span> buf[<span class="number">100</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">        <span class="built_in">memcpy</span>(buf, hm-&gt;body.p,</span><br><span class="line">               <span class="keyword">sizeof</span>(buf) - <span class="number">1</span> &lt; hm-&gt;body.len ? <span class="keyword">sizeof</span>(buf) - <span class="number">1</span> : hm-&gt;body.len);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, buf);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mg_serve_http(nc, hm, s_http_server_opts); <span class="comment">/* Serve static content */</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span> </span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_mgr</span> <span class="title">mgr</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_connection</span> *<span class="title">nc</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_bind_opts</span> <span class="title">bind_opts</span>;</span></span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line">  <span class="keyword">char</span> *cp;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *err_str;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> MG_ENABLE_SSL</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *ssl_cert = <span class="literal">NULL</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">  mg_mgr_init(&amp;mgr, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Use current binary directory as document root */</span></span><br><span class="line">  <span class="keyword">if</span> (argc &gt; <span class="number">0</span> &amp;&amp; ((cp = <span class="built_in">strrchr</span>(argv[<span class="number">0</span>], DIRSEP)) != <span class="literal">NULL</span>)) &#123;</span><br><span class="line">    *cp = <span class="string">'\0'</span>;</span><br><span class="line">    s_http_server_opts.document_root = argv[<span class="number">0</span>];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Process command line options to customize HTTP server */</span></span><br><span class="line">  <span class="comment">// 省略这部分代码</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Set HTTP server options */</span></span><br><span class="line">  <span class="built_in">memset</span>(&amp;bind_opts, <span class="number">0</span>, <span class="keyword">sizeof</span>(bind_opts));</span><br><span class="line">  bind_opts.error_string = &amp;err_str;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> MG_ENABLE_SSL</span></span><br><span class="line">  <span class="keyword">if</span> (ssl_cert != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    bind_opts.ssl_cert = ssl_cert;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">  nc = mg_bind_opt(&amp;mgr, s_http_port, ev_handler, bind_opts);</span><br><span class="line">  <span class="keyword">if</span> (nc == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Error starting server on port %s: %s\n"</span>, s_http_port,</span><br><span class="line">            *bind_opts.error_string);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  mg_set_protocol_http_websocket(nc);</span><br><span class="line">  s_http_server_opts.enable_directory_listing = <span class="string">"yes"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Starting RESTful server on port %s, serving %s\n"</span>, s_http_port,</span><br><span class="line">         s_http_server_opts.document_root);</span><br><span class="line">  <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">    mg_mgr_poll(&amp;mgr, <span class="number">1000</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  mg_mgr_free(&amp;mgr);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>主要区别在于处理<code>MG_EV_HTTP_REQUEST</code>时，根据请求的uri的不同进行不同的处理。示例中请求<code>/api/v1/sum</code>时，调用了<code>handle_sum_call</code>进行处理。</p>
+<p>从示例的<code>handle_sum_call</code>方法我们可以了解返回结果基本步骤。</p>
+<ol>
+<li>根据业务逻辑得到需要返回的字符串。</li>
+<li>调用<code>mg_printf(nc, &quot;%s&quot;, &quot;HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n&quot;);</code>回写headers。</li>
+<li>调用<code>mg_printf_http_chunk(nc, result);</code>回写response，其中<code>result</code>即第1步得到的要返回的字符串。</li>
+<li>调用<code>mg_send_http_chunk(nc, &quot;&quot;, 0);</code>作为结束。</li>
+</ol>
+<h2 id="请求信息的获取"><a href="#请求信息的获取" class="headerlink" title="请求信息的获取"></a>请求信息的获取</h2><p>处理具体业务时，我们可能需要根据请求的header、method、body等进行相应的处理。前文提到我们在收到<code>MG_EV_HTTP_REQUEST</code>类型的回调时，可以将第3个参数转为<code>http_message</code>结构体，其定义如下，可以结合官方的注释了解其含义。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">http_message</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">message</span>;</span> <span class="comment">/* Whole message: request line + headers + body */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">body</span>;</span>    <span class="comment">/* Message body. 0-length for requests with no body */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* HTTP Request line (or HTTP response line) */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">method</span>;</span> <span class="comment">/* "GET" */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">uri</span>;</span>    <span class="comment">/* "/my_file.html" */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">proto</span>;</span>  <span class="comment">/* "HTTP/1.1" -- for both request and response */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* For responses, code and response status message are set */</span></span><br><span class="line">    <span class="keyword">int</span> resp_code;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">resp_status_msg</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * Query-string part of the URI. For example, for HTTP request</span></span><br><span class="line"><span class="comment">     *    GET /foo/bar?param1=val1&amp;param2=val2</span></span><br><span class="line"><span class="comment">     *    |    uri    |     query_string     |</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * Note that question mark character doesn't belong neither to the uri,</span></span><br><span class="line"><span class="comment">     * nor to the query_string</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">query_string</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Headers */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">header_names</span>[<span class="title">MG_MAX_HTTP_HEADERS</span>];</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">header_values</span>[<span class="title">MG_MAX_HTTP_HEADERS</span>];</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中每一个属性都是<code>mg_str</code>结构体，其定义如下。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> &#123;</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *p; <span class="comment">/* Memory chunk pointer */</span></span><br><span class="line">    <span class="keyword">size_t</span> len;    <span class="comment">/* Memory chunk length */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>可以看出，<code>mg_str</code>实际就是存了起始地址和长度，所有我们从相应地址开始截取指定长度就是对于的属性内容。我们可以用类似下面这种方式获取相应属性：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">string</span> uri = <span class="built_in">std</span>::<span class="built_in">string</span>(http_req-&gt;uri.p, http_req-&gt;uri.len);</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">string</span> body = <span class="built_in">std</span>::<span class="built_in">string</span>(http_req-&gt;body.p, http_req-&gt;body.len);</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">string</span> method = <span class="built_in">std</span>::<span class="built_in">string</span>(http_req-&gt;method.p, http_req-&gt;method.len);</span><br></pre></td></tr></table></figure>
+<p>headers的获取类似，header的key和value分别存放在<code>header_names</code>和<code>header_values</code>2个数组中，数组的长度<code>MG_MAX_HTTP_HEADERS</code>默认值为40，因此最大只支持40个header，当然我们可以自行修改该值。</p>
+<h1 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h1><p>前文已经介绍了mongoose的简单使用了，但都是单线程的方式，QPS必然很难上去。mongoose也能支持1个IO线程、N个工作线程的模式。我们还是先来看一下<a href="https://github.com/cesanta/mongoose/blob/master/examples/multithreaded" target="_blank" rel="noopener">官方示例</a>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mongoose.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">sig_atomic_t</span> s_received_signal = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> *s_http_port = <span class="string">"8000"</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> s_num_worker_threads = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> s_next_id = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">signal_handler</span><span class="params">(<span class="keyword">int</span> sig_num)</span> </span>&#123;</span><br><span class="line">  signal(sig_num, signal_handler);</span><br><span class="line">  s_received_signal = sig_num;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">mg_serve_http_opts</span> <span class="title">s_http_server_opts</span>;</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">sock_t</span> sock[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// This info is passed to the worker thread</span></span><br><span class="line"><span class="comment">// 用于IO线程向工作线程发送请求</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">work_request</span> &#123;</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> conn_id;  <span class="comment">// needed to identify the connection where to send the reply</span></span><br><span class="line">  <span class="comment">// optionally, more data that could be required by worker </span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// This info is passed by the worker thread to mg_broadcast</span></span><br><span class="line"><span class="comment">// 用于工作线程向IO线程返回结果</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">work_result</span> &#123;</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">long</span> conn_id;</span><br><span class="line">  <span class="keyword">int</span> sleep_time;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 运行在IO线程，用于回写结果</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">on_work_complete</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> ev, <span class="keyword">void</span> *ev_data)</span> </span>&#123;</span><br><span class="line">  (<span class="keyword">void</span>) ev;</span><br><span class="line">  <span class="keyword">char</span> s[<span class="number">32</span>];</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_connection</span> *<span class="title">c</span>;</span></span><br><span class="line">  <span class="keyword">for</span> (c = mg_next(nc-&gt;mgr, <span class="literal">NULL</span>); c != <span class="literal">NULL</span>; c = mg_next(nc-&gt;mgr, c)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (c-&gt;user_data != <span class="literal">NULL</span>) &#123;</span><br><span class="line">      <span class="class"><span class="keyword">struct</span> <span class="title">work_result</span> *<span class="title">res</span> = (<span class="title">struct</span> <span class="title">work_result</span> *)<span class="title">ev_data</span>;</span></span><br><span class="line">      <span class="keyword">if</span> ((<span class="keyword">unsigned</span> <span class="keyword">long</span>)c-&gt;user_data == res-&gt;conn_id) &#123;</span><br><span class="line">        <span class="built_in">sprintf</span>(s, <span class="string">"conn_id:%lu sleep:%d"</span>, res-&gt;conn_id, res-&gt;sleep_time);</span><br><span class="line">        mg_send_head(c, <span class="number">200</span>, <span class="built_in">strlen</span>(s), <span class="string">"Content-Type: text/plain"</span>);</span><br><span class="line">        mg_printf(c, <span class="string">"%s"</span>, s);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 工作线程</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">worker_thread_proc</span><span class="params">(<span class="keyword">void</span> *param)</span> </span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_mgr</span> *<span class="title">mgr</span> = (<span class="title">struct</span> <span class="title">mg_mgr</span> *) <span class="title">param</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">work_request</span> <span class="title">req</span> = &#123;</span><span class="number">0</span>&#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">while</span> (s_received_signal == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (read(sock[<span class="number">1</span>], &amp;req, <span class="keyword">sizeof</span>(req)) &lt; <span class="number">0</span>)</span><br><span class="line">      perror(<span class="string">"Reading worker sock"</span>);</span><br><span class="line">    <span class="keyword">int</span> r = rand() % <span class="number">10</span>;</span><br><span class="line">    sleep(r);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">work_result</span> <span class="title">res</span> = &#123;</span>req.conn_id, r&#125;;</span><br><span class="line">    mg_broadcast(mgr, on_work_complete, (<span class="keyword">void</span> *)&amp;res, <span class="keyword">sizeof</span>(res));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ev_handler</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> ev, <span class="keyword">void</span> *ev_data)</span> </span>&#123;</span><br><span class="line">  (<span class="keyword">void</span>) nc;</span><br><span class="line">  (<span class="keyword">void</span>) ev_data;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">switch</span> (ev) &#123;</span><br><span class="line">    <span class="keyword">case</span> MG_EV_ACCEPT:</span><br><span class="line">    <span class="comment">// 给连接设置一个id，用于后面IO线程回写结果找到对应的id回写。</span></span><br><span class="line">      nc-&gt;user_data = (<span class="keyword">void</span> *)++s_next_id;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> MG_EV_HTTP_REQUEST: &#123;</span><br><span class="line">      <span class="class"><span class="keyword">struct</span> <span class="title">work_request</span> <span class="title">req</span> = &#123;</span>(<span class="keyword">unsigned</span> <span class="keyword">long</span>)nc-&gt;user_data&#125;;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (write(sock[<span class="number">0</span>], &amp;req, <span class="keyword">sizeof</span>(req)) &lt; <span class="number">0</span>)</span><br><span class="line">        perror(<span class="string">"Writing worker sock"</span>);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> MG_EV_CLOSE: &#123;</span><br><span class="line">      <span class="keyword">if</span> (nc-&gt;user_data) nc-&gt;user_data = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_mgr</span> <span class="title">mgr</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_connection</span> *<span class="title">nc</span>;</span></span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 起一对socket，用于IO线程向工作线程发送请求</span></span><br><span class="line">  <span class="keyword">if</span> (mg_socketpair(sock, SOCK_STREAM) == <span class="number">0</span>) &#123;</span><br><span class="line">    perror(<span class="string">"Opening socket pair"</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  signal(SIGTERM, signal_handler);</span><br><span class="line">  signal(SIGINT, signal_handler);</span><br><span class="line"></span><br><span class="line">  mg_mgr_init(&amp;mgr, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">  nc = mg_bind(&amp;mgr, s_http_port, ev_handler);</span><br><span class="line">  <span class="keyword">if</span> (nc == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Failed to create listener\n"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  mg_set_protocol_http_websocket(nc);</span><br><span class="line">  s_http_server_opts.document_root = <span class="string">"."</span>;  <span class="comment">// Serve current directory</span></span><br><span class="line">  s_http_server_opts.enable_directory_listing = <span class="string">"no"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; s_num_worker_threads; i++) &#123;</span><br><span class="line">    mg_start_thread(worker_thread_proc, &amp;mgr);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Started on port %s\n"</span>, s_http_port);</span><br><span class="line">  <span class="keyword">while</span> (s_received_signal == <span class="number">0</span>) &#123;</span><br><span class="line">    mg_mgr_poll(&amp;mgr, <span class="number">200</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  mg_mgr_free(&amp;mgr);</span><br><span class="line"></span><br><span class="line">  closesocket(sock[<span class="number">0</span>]);</span><br><span class="line">  closesocket(sock[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>简单来说，流程是IO线程收到请求后，将请求通过socket发往工作线程，工作线程处理完后，通过<code>mg_broadcast</code>方法返回IO线程，mongoose内部也有一对socket用于工作线程向IO线程通信，IO线程收到后向对应的连接回写结果。</p>
+<p>我们一个一个关键点来看。</p>
+<h2 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (mg_socketpair(sock, SOCK_STREAM) == <span class="number">0</span>) &#123;</span><br><span class="line">    perror(<span class="string">"Opening socket pair"</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过调用<code>mg_socketpair</code>方法开启一对socket，如前文所述，这对socket是用于IO线程向工作线程发送请求的。而工作线程向IO线程返回结果的socket不需要我们操心，mongoose帮我们实现了。<br>示例中定义了<code>work_request</code>和<code>work_result</code>2个结构体用于传输请求和结果，我们可以根据业务需要修改这2个结构体，但需要注意序列化的问题。</p>
+<p>另外这里有个隐藏的坑。mongoose帮我们实现的socket利用了其定义的<code>ctl_msg</code>结构体进行传输。其定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ctl_msg</span> &#123;</span></span><br><span class="line">    <span class="keyword">mg_event_handler_t</span> callback;</span><br><span class="line">    <span class="keyword">char</span> message[MG_CTL_MSG_MESSAGE_SIZE];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中<code>MG_CTL_MSG_MESSAGE_SIZE</code>默认值是8192，因此如果你的返回结果超过8k会有问题，需要将该值调大。</p>
+<p>如果不想用socket从IO线程向工作线程发请求的话，我们也可以使用队列之类的，IO线程将请求往队列扔，工作线程一直从队列读请求。这里就不写具体实现了。</p>
+<h2 id="工作线程"><a href="#工作线程" class="headerlink" title="工作线程"></a>工作线程</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; s_num_worker_threads; i++) &#123;</span><br><span class="line">    mg_start_thread(worker_thread_proc, &amp;mgr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例中这部分代码即开启工作线程，我们可以根据自己的需要启动任意数量的工作线程。需要注意的是我们要将<code>MG_ENABLE_THREADS</code>的值改为1，否则<code>mg_start_thread</code>是无法调用的。</p>
+<p>示例中的工作线程的实现如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">worker_thread_proc</span><span class="params">(<span class="keyword">void</span> *param)</span> </span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_mgr</span> *<span class="title">mgr</span> = (<span class="title">struct</span> <span class="title">mg_mgr</span> *) <span class="title">param</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">work_request</span> <span class="title">req</span> = &#123;</span><span class="number">0</span>&#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">while</span> (s_received_signal == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (read(sock[<span class="number">1</span>], &amp;req, <span class="keyword">sizeof</span>(req)) &lt; <span class="number">0</span>)</span><br><span class="line">      perror(<span class="string">"Reading worker sock"</span>);</span><br><span class="line">    <span class="keyword">int</span> r = rand() % <span class="number">10</span>;</span><br><span class="line">    sleep(r);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">work_result</span> <span class="title">res</span> = &#123;</span>req.conn_id, r&#125;;</span><br><span class="line">    mg_broadcast(mgr, on_work_complete, (<span class="keyword">void</span> *)&amp;res, <span class="keyword">sizeof</span>(res));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先通过<code>read</code>把<code>work_request</code>读出来，处理完后调用<code>mg_broadcast</code>将<code>work_result</code>返回IO线程，其中<code>on_work_complete</code>是返回IO线程后需要执行的方法。上节已经提到了，需要注意一下返回长度的问题。</p>
+<h2 id="IO线程（接收请求）"><a href="#IO线程（接收请求）" class="headerlink" title="IO线程（接收请求）"></a>IO线程（接收请求）</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ev_handler</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> ev, <span class="keyword">void</span> *ev_data)</span> </span>&#123;</span><br><span class="line">  (<span class="keyword">void</span>) nc;</span><br><span class="line">  (<span class="keyword">void</span>) ev_data;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">switch</span> (ev) &#123;</span><br><span class="line">    <span class="keyword">case</span> MG_EV_ACCEPT:</span><br><span class="line">      nc-&gt;user_data = (<span class="keyword">void</span> *)++s_next_id;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> MG_EV_HTTP_REQUEST: &#123;</span><br><span class="line">      <span class="class"><span class="keyword">struct</span> <span class="title">work_request</span> <span class="title">req</span> = &#123;</span>(<span class="keyword">unsigned</span> <span class="keyword">long</span>)nc-&gt;user_data&#125;;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (write(sock[<span class="number">0</span>], &amp;req, <span class="keyword">sizeof</span>(req)) &lt; <span class="number">0</span>)</span><br><span class="line">        perror(<span class="string">"Writing worker sock"</span>);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> MG_EV_CLOSE: &#123;</span><br><span class="line">      <span class="keyword">if</span> (nc-&gt;user_data) nc-&gt;user_data = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>MG_EV_ACCEPT</code>事件时，为<code>mg_connection</code>的<code>user_data</code>赋一个id，之后需要根据这个id确定向哪个连接回写结果。<code>MG_EV_CLOSE</code>事件时将该id置空。</p>
+<p>而在<code>MG_EV_HTTP_REQUEST</code>时，通过<code>write</code>方法将封装的<code>work_request</code>向socket写。这样便能被上一节中的工作线程从socket中读到。</p>
+<h2 id="IO线程（返回结果）"><a href="#IO线程（返回结果）" class="headerlink" title="IO线程（返回结果）"></a>IO线程（返回结果）</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">on_work_complete</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> ev, <span class="keyword">void</span> *ev_data)</span> </span>&#123;</span><br><span class="line">  (<span class="keyword">void</span>) ev;</span><br><span class="line">  <span class="keyword">char</span> s[<span class="number">32</span>];</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_connection</span> *<span class="title">c</span>;</span></span><br><span class="line">  <span class="keyword">for</span> (c = mg_next(nc-&gt;mgr, <span class="literal">NULL</span>); c != <span class="literal">NULL</span>; c = mg_next(nc-&gt;mgr, c)) &#123;</span><br><span class="line">    <span class="keyword">if</span> (c-&gt;user_data != <span class="literal">NULL</span>) &#123;</span><br><span class="line">      <span class="class"><span class="keyword">struct</span> <span class="title">work_result</span> *<span class="title">res</span> = (<span class="title">struct</span> <span class="title">work_result</span> *)<span class="title">ev_data</span>;</span></span><br><span class="line">      <span class="keyword">if</span> ((<span class="keyword">unsigned</span> <span class="keyword">long</span>)c-&gt;user_data == res-&gt;conn_id) &#123;</span><br><span class="line">        <span class="built_in">sprintf</span>(s, <span class="string">"conn_id:%lu sleep:%d"</span>, res-&gt;conn_id, res-&gt;sleep_time);</span><br><span class="line">        mg_send_head(c, <span class="number">200</span>, <span class="built_in">strlen</span>(s), <span class="string">"Content-Type: text/plain"</span>);</span><br><span class="line">        mg_printf(c, <span class="string">"%s"</span>, s);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的逻辑是遍历所有的连接，找出id相同的连接（即上一节提到的<code>MG_EV_ACCEPT</code>事件时设置的id），然后向改连接回写结果。</p>
+<p>这里示例的实现我觉得有点问题，我们看一下mongoose中是如何回调<code>on_work_complete</code>方法的。前文提到mongoose中也有一对socket，用于工作线程向IO线程发送结果，结果是在<code>mg_mgr_handle_ctl_sock</code>方法中取出来的，代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">mg_mgr_handle_ctl_sock</span><span class="params">(struct mg_mgr *mgr)</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ctl_msg</span> <span class="title">ctl_msg</span>;</span></span><br><span class="line">    <span class="keyword">int</span> len =</span><br><span class="line">            (<span class="keyword">int</span>) MG_RECV_FUNC(mgr-&gt;ctl[<span class="number">1</span>], (<span class="keyword">char</span> *) &amp;ctl_msg, <span class="keyword">sizeof</span>(ctl_msg), <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">size_t</span> dummy = MG_SEND_FUNC(mgr-&gt;ctl[<span class="number">1</span>], ctl_msg.message, <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">    DBG((<span class="string">"read %d from ctl socket"</span>, len));</span><br><span class="line">    (<span class="keyword">void</span>) dummy; <span class="comment">/* https://gcc.gnu.org/bugzilla/show_bug.cgi?id=25509 */</span></span><br><span class="line">    <span class="keyword">if</span> (len &gt;= (<span class="keyword">int</span>) <span class="keyword">sizeof</span>(ctl_msg.callback) &amp;&amp; ctl_msg.callback != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">mg_connection</span> *<span class="title">nc</span>;</span></span><br><span class="line">        <span class="keyword">for</span> (nc = mg_next(mgr, <span class="literal">NULL</span>); nc != <span class="literal">NULL</span>; nc = mg_next(mgr, nc)) &#123;</span><br><span class="line">            ctl_msg.callback(nc, MG_EV_POLL,</span><br><span class="line">                             ctl_msg.message MG_UD_ARG(nc-&gt;user_data));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以清楚地看到，mongoose已经将所有的连接遍历一次了，并且会将每个连接当参数执行回调的方法（即<code>ctl_msg.callback(nc, MG_EV_POLL, ctl_msg.message MG_UD_ARG(nc-&gt;user_data));</code>）。所有我理解在<code>on_work_complete</code>中我们没必要再遍历一次了，只需要判断传过来的<code>mg_connection</code>是不是我们需要的那个连接，对正确的那个连接回写即可。</p>
+<h1 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h1><p>在16核 16G内存的机器上进行了一下压测。同样都以20个并发压（恕我直言，并发太高这个框架根本扛不住）。压了3个不同的版本，这三个版本逻辑基本是一致的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">版本一： Go + C++版本。Go实现Http Server，Thrift调用C++逻辑代码。</span><br><span class="line">版本二： C++版本。C++实现Http Server（基于mongoose），逻辑部分和版本一一样，因为整合成了一个程序，所以直接调用逻辑部分的方法。</span><br><span class="line">版本三： Java版本。基于Spring Boot。</span><br></pre></td></tr></table></figure></p>
+<p>在20的并发下，版本一最大QPS 3500左右，不过此时平均耗时已经增加到了30~40ms。版本二最大QPS 2000左右，平均耗时6ms。版本三最大QPS 5000~5500，平均耗时4ms。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>mongoose并不算很成熟，性能上也不怎么样。</li>
+<li>如果真的需要使用，最好再进行一层封装。可以参考<a href="https://github.com/tashaxing/CppHttpDemo" target="_blank" rel="noopener">这位同学的实现</a>。</li>
+<li>C++用于应用层不仅开发起来费时，得到的好处似乎也有限，可能是我太年轻？</li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-07-25T09:26:49.765Z" itemprop="dateUpdated">2018-07-25 17:26:49</time>
+</span><br>
+
+
+        
+        <span class="post-time"></span>原始链接：<a href="/2018/07/25/cpp-http-server-mongoose/" target="_blank" rel="external">https://blog.darkness463.top/2018/07/25/cpp-http-server-mongoose/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.darkness463.top">
+            <img src="/img/avatar.png" alt="Darkness463">
+            Darkness463
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cpp/">Cpp</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2018/07/25/cpp-http-server-mongoose/&title=《基于mongoose的C++ Http Server的“坑”与“坑”》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2018/07/25/cpp-http-server-mongoose/&title=《基于mongoose的C++ Http Server的“坑”与“坑”》 — 变猴旅程&source=最近有个奇葩的需求，需要用C++去实现一个Http Server。用Java或者其他语言去实现Http Server是一件很简单的事，但用C++去实现我就..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2018/07/25/cpp-http-server-mongoose/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于mongoose的C++ Http Server的“坑”与“坑”》 — 变猴旅程&url=https://blog.darkness463.top/2018/07/25/cpp-http-server-mongoose/&via=https://blog.darkness463.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2018/07/25/cpp-http-server-mongoose/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/06/20/Xposed-Check/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">聊聊Xposed检测</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "EJ17EMwPSTJUugIxg05Lm2Lh-gzGzoHsz",
+            appKey: "V2Wkeg12C8QRr8dgCI41FRqF",
+            avatar: "identicon",
+            placeholder: "欢迎指正~",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <!-- 
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span> -->
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Darkness463 &copy; 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2018/07/25/cpp-http-server-mongoose/&title=《基于mongoose的C++ Http Server的“坑”与“坑”》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2018/07/25/cpp-http-server-mongoose/&title=《基于mongoose的C++ Http Server的“坑”与“坑”》 — 变猴旅程&source=最近有个奇葩的需求，需要用C++去实现一个Http Server。用Java或者其他语言去实现Http Server是一件很简单的事，但用C++去实现我就..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2018/07/25/cpp-http-server-mongoose/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于mongoose的C++ Http Server的“坑”与“坑”》 — 变猴旅程&url=https://blog.darkness463.top/2018/07/25/cpp-http-server-mongoose/&via=https://blog.darkness463.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2018/07/25/cpp-http-server-mongoose/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACpklEQVR42u3aQXLbMBAEQP//08kDEtEzu4CKh+ZJZYsgmgcsNIufn/j68+H69J3ncZLP/472PPLqwsPDwzs09U+PbO99Bjz/JRnh+bl4eHh493ibRTxZ0J+f0haGZM54eHh47+clY+Zl4Nhz8fDw8F7Mmy39s1eAh4eH9wZeEkY8D5RHDBvwxawFDw8PL+blXaT3fL7S38PDw8Nbd9XbBXfWJGsLTDFbPDw8vAu8fMHNN9mbV9O+uOibeHh4eNd4p45V5SPM4ok6zMXDw8M7ykvC2dmCnsfB+cg1FQ8PD+8CLw9qZ8XjebTkv7OQAg8PD+87vBzZ3pt/p92m18UMDw8Pb81rg9EcmU8oKTOzxhgeHh7ebV6+nc0j1zbk3TTAfsla8PDw8A7x2sbVftKz0VYvCA8PD+8oLzpZsC4Pp4pKHWrg4eHhfYWXRw+zY1izSCL5GfCf0fDw8PAu8PaNq/xYVR7I5i26IozAw8PDu8zLN8F5/Dprtm3miYeHh3ePlyzB+01zGzFsDiJESDw8PLwRLz/GlCzf+6AheXFFucLDw8O7wGuX+HaZHgavedCwOR+Bh4eHt+DNlvj2rvaabevx8PDwbvOSYwGzpbktAPlMigYeHh4e3gVePrlNU7/dTLdlo+jy4eHh4R3itZgNI8fk7a5hScDDw8Nb8/Lt7PMr2Deu8sijyKfx8PDwLvDax8zOdrXHFJLrl/KAh4eHd5Q3a0q19w63wvFm/eOYeHh4eBd47eKbxxCzkOJwDIGHh4d3jXf28FO7CZ6FI0UkgYeHh3eNl//IbxfoWcxxOGvBw8PDewFvtsluW1nJ3K4UBjw8PLyjvE1gkRwv2MfEeHh4eN/hbTa+7bGt1RZ5Vhjw8PDwjvJmwWtLbUOKU5ExHh4e3lHeXztb7gP2e2usAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
