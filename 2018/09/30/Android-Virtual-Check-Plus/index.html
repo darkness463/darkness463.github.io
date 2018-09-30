@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?d5cc253e5cbdd2683026f50541666cc0"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="https://blog.darkness463.top/2018/09/30/Android-Virtual-Check-Plus/">
+    
+    
+    <title>Android多开检测的另一个思路 | 变猴旅程 | 从人变猴的历程</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android">
+    <meta name="description" content="之前写了篇检测多开的文章后，经过几个月的时间，基本上都已经被各多开软件绕过了。最近无意中发现了一些新特征，在特定环境下可以用来检测多开环境，特此来分享一下。">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android多开检测的另一个思路">
+<meta property="og:url" content="https://blog.darkness463.top/2018/09/30/Android-Virtual-Check-Plus/index.html">
+<meta property="og:site_name" content="变猴旅程">
+<meta property="og:description" content="之前写了篇检测多开的文章后，经过几个月的时间，基本上都已经被各多开软件绕过了。最近无意中发现了一些新特征，在特定环境下可以用来检测多开环境，特此来分享一下。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-09-30T09:44:13.158Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android多开检测的另一个思路">
+<meta name="twitter:description" content="之前写了篇检测多开的文章后，经过几个月的时间，基本上都已经被各多开软件绕过了。最近无意中发现了一些新特征，在特定环境下可以用来检测多开环境，特此来分享一下。">
+    
+        <link rel="alternate" type="application/atom+xml" title="变猴旅程" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.png">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Darkness463</h5>
+          <a href="mailto:darkness463@gmail.com" title="darkness463@gmail.com" class="mail">darkness463@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/darkness463" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://www.weibo.com/darkness463" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Android多开检测的另一个思路</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Android多开检测的另一个思路</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-09-30T09:42:17.000Z" itemprop="datePublished" class="page-time">
+  2018-09-30
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#起因"><span class="post-toc-number">1.</span> <span class="post-toc-text">起因</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#解释"><span class="post-toc-number">2.</span> <span class="post-toc-text">解释</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#局限性"><span class="post-toc-number">3.</span> <span class="post-toc-text">局限性</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#补遗"><span class="post-toc-number">4.</span> <span class="post-toc-text">补遗</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Android-Virtual-Check-Plus"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Android多开检测的另一个思路</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-09-30 17:42:17" datetime="2018-09-30T09:42:17.000Z"  itemprop="datePublished">2018-09-30</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>之前写了篇<a href="https://blog.darkness463.top/2018/05/04/Android-Virtual-Check/">检测多开的文章</a>后，经过几个月的时间，基本上都已经被各多开软件绕过了。最近无意中发现了一些新特征，在特定环境下可以用来检测多开环境，特此来分享一下。</p>
+<a id="more"></a>
+<h1 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h1><p>某次在多开环境下运行demo，发现动态库加载失败了，错误信息如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">java.lang.UnsatisfiedLinkError: dlopen failed: <span class="string">"/data/app/【手动打码】/lib/arm64/【手动打码】.so"</span> is <span class="number">64</span>-bit instead of <span class="number">32</span>-bit</span><br><span class="line"> at java.lang.Runtime.loadLibrary0(Runtime.java:<span class="number">1016</span>)</span><br><span class="line"> at java.lang.System.loadLibrary(System.java:<span class="number">1660</span>)</span><br><span class="line"> ... 省略</span><br></pre></td></tr></table></figure>
+<p>这个错误没什么好多说的，很明显，动态库是64位的而App运行在32位下，因此加载失败了。其实之前也看到过类似的现象，本应在64位下运行的App到多开环境下就变为32位环境了，只是之前并没有去深究，这次遇到后仔细想了一下，在某些情况下可以用来检测多开环境。</p>
+<h1 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h1><p>对于64位的手机，会启动2个zygote，<code>zygote</code>和<code>zygote64</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root  670 1 4359784  27292 poll_schedule_timeout 7f7b47058c S zygote64</span><br><span class="line">root  671 1 1696576  11120 poll_schedule_timeout eb823684   S zygote</span><br></pre></td></tr></table></figure>
+<p>以64位运行的App将由<code>zygote64</code> fork而来，而以32位运行的App将由<code>zygote</code> fork出来。可以从下面的代码看出来，<code>ZygoteProcess.java</code>中，<code>startViaZygote</code>方法会通过<code>openZygoteSocketIfNeeded</code>方法选择合适的zygote。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Process.<span class="function">ProcessStartResult <span class="title">startViaZygote</span><span class="params">(<span class="keyword">final</span> String processClass,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                  <span class="keyword">final</span> String niceName,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                  <span class="keyword">final</span> <span class="keyword">int</span> uid, <span class="keyword">final</span> <span class="keyword">int</span> gid,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                  <span class="keyword">final</span> <span class="keyword">int</span>[] gids,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                  <span class="keyword">int</span> debugFlags, <span class="keyword">int</span> mountExternal,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                  <span class="keyword">int</span> targetSdkVersion,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                  String seInfo,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                  String abi,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                  String instructionSet,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                  String appDataDir,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                  String invokeWith,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                  String[] extraArgs)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> ZygoteStartFailedEx </span>&#123;</span><br><span class="line">    <span class="comment">// 省略...</span></span><br><span class="line">    <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">        <span class="keyword">return</span> zygoteSendArgsAndGetResult(openZygoteSocketIfNeeded(abi), argsForZygote);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@GuardedBy</span>(<span class="string">"mLock"</span>)</span><br><span class="line"><span class="function"><span class="keyword">private</span> ZygoteState <span class="title">openZygoteSocketIfNeeded</span><span class="params">(String abi)</span> <span class="keyword">throws</span> ZygoteStartFailedEx </span>&#123;</span><br><span class="line">    Preconditions.checkState(Thread.holdsLock(mLock), <span class="string">"ZygoteProcess lock not held"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (primaryZygoteState == <span class="keyword">null</span> || primaryZygoteState.isClosed()) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            primaryZygoteState = ZygoteState.connect(mSocket);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException ioe) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ZygoteStartFailedEx(<span class="string">"Error connecting to primary zygote"</span>, ioe);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (primaryZygoteState.matches(abi)) &#123;</span><br><span class="line">        <span class="keyword">return</span> primaryZygoteState;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// The primary zygote didn't match. Try the secondary.</span></span><br><span class="line">    <span class="keyword">if</span> (secondaryZygoteState == <span class="keyword">null</span> || secondaryZygoteState.isClosed()) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            secondaryZygoteState = ZygoteState.connect(mSecondarySocket);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException ioe) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ZygoteStartFailedEx(<span class="string">"Error connecting to secondary zygote"</span>, ioe);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (secondaryZygoteState.matches(abi)) &#123;</span><br><span class="line">        <span class="keyword">return</span> secondaryZygoteState;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> ZygoteStartFailedEx(<span class="string">"Unsupported zygote ABI: "</span> + abi);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么如何确定App是以64位还是以32位运行呢？这就取决于动态库，如果只有32位的动态库（armeabi、armeabi-v7a），那么就会以32位运行，如果有64位的动态库（arm64-v8a），那么就以64位运行，不存在动态库则默认以64位运行。</p>
+<p>如何证明？我们写3个demo来实际看一下。</p>
+<ul>
+<li>demo1: 包名<code>top.darkness463.whichzygote</code>，不加动态库。</li>
+<li>demo2: 包名<code>top.darkness463.zygote32</code>，加一个<code>armeabi</code>动态库。</li>
+<li>demo3: 包名<code>top.darkness463.zygote64</code>，加<code>armeabi</code>和<code>arm64-v8a</code>动态库。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root     670    1   4359784  27692 poll_schedule_timeout 7f7b47058c S zygote64</span><br><span class="line">root     671    1   1696576  11416 poll_schedule_timeout eb823684   S zygote</span><br><span class="line">u0_a177  9878   670 4456080  63412 SyS_epoll_wait        7f7b47046c S top.darkness463.whichzygote</span><br><span class="line">u0_a180  13690  671 1791700  58664 SyS_epoll_wait        eb8234ac   S top.darkness463.zygote32</span><br><span class="line">u0_a179  13871  670 4456524  64716 SyS_epoll_wait        7f7b47046c S top.darkness463.zygote64</span><br></pre></td></tr></table></figure>
+<p>可以看到，demo1和demo3的父进程是<code>zygote64</code>，而demo2的父进程是<code>zygote</code>。</p>
+<p>那么为何在多开环境下会出现动态库加载失败的情况呢？原因就在于我那个demo有<code>arm64-v8a</code>的动态库，在安装时，系统会把该64位动态库拷到<code>/data/app/【包名】/lib/arm64/</code>下，然后那款多开软件只有32位的动态库，因此是以32位运行的，此时去<code>/data/app/【包名】/lib/arm64/</code>路径下加载64位的动态库必然导致失败。</p>
+<p>打开思路的话，这也可以是一种检测多开环境的方式。</p>
+<h1 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h1><p>其实与其说这是检测多开的方法，倒不如说这是多开软件的bug。看了几款排名靠前的多开软件，都只有32位的动态库，但它们完全可以加上64位动态库来避免这个问题。</p>
+<p>另外，为了减小apk的体积，绝大多数App只会添加<code>armeabi</code>平台，而不会添加<code>arm64-v8a</code>平台的动态库，所以这种检测方法在很多App上本身就是不成立的。</p>
+<h1 id="补遗"><a href="#补遗" class="headerlink" title="补遗"></a>补遗</h1><p>之前那篇文章提到过一个通过<code>/proc/self/maps</code>来检测多开的方式，当时提到这个方法的缺点是需要收集所有多开App的包名，但真正搞事的人很可能不会拿市面上的多开软件来作恶，他们可能利用开源的多开软件改成乱七八糟的包名，之前我甚至见过命名成<code>com.tencent.qqlite</code>来进行伪装的。之后我又做了一些工作，也和大家分享一下。</p>
+<p>思路还是从<code>/proc/self/maps</code>中的动态库出发。在这里直接给出结论了不再详细讨论了。</p>
+<ul>
+<li><code>/proc/self/maps</code>中出现包含 <code>/vbox/data/</code>、 <code>/shadow/data/</code>、 <code>/virtual/data/</code>的动态库，则运行在多开环境下。主要是因为很多多开软件都是基于开源或者抄来抄去的，所有目录名无外乎这么几种，但不排除会有多开软件修改掉名字的情况。</li>
+<li>从<code>/proc/self/maps</code>加载的动态库路径我们可以解析到包名，如果自己的App并不会加载其他App的动态库（第三方登录可能会把其他App的动态库加载进去）的话，出现非自己包名的动态库可能疑似运行在多开环境下。服务端可以建立一套自动解析包名 + 添加到黑名单的流程。</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-09-30T09:44:13.158Z" itemprop="dateUpdated">2018-09-30 17:44:13</time>
+</span><br>
+
+
+        
+        <span class="post-time"></span>原始链接：<a href="/2018/09/30/Android-Virtual-Check-Plus/" target="_blank" rel="external">https://blog.darkness463.top/2018/09/30/Android-Virtual-Check-Plus/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.darkness463.top">
+            <img src="/img/avatar.png" alt="Darkness463">
+            Darkness463
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2018/09/30/Android-Virtual-Check-Plus/&title=《Android多开检测的另一个思路》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2018/09/30/Android-Virtual-Check-Plus/&title=《Android多开检测的另一个思路》 — 变猴旅程&source=之前写了篇检测多开的文章后，经过几个月的时间，基本上都已经被各多开软件绕过了。最近无意中发现了一些新特征，在特定环境下可以用来检测多开环境，特此来分享一下。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2018/09/30/Android-Virtual-Check-Plus/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android多开检测的另一个思路》 — 变猴旅程&url=https://blog.darkness463.top/2018/09/30/Android-Virtual-Check-Plus/&via=https://blog.darkness463.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2018/09/30/Android-Virtual-Check-Plus/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/07/25/cpp-http-server-mongoose/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">基于mongoose的C++ Http Server的“坑”与“坑”</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "EJ17EMwPSTJUugIxg05Lm2Lh-gzGzoHsz",
+            appKey: "V2Wkeg12C8QRr8dgCI41FRqF",
+            avatar: "identicon",
+            placeholder: "欢迎指正~",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            <!-- 
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span> -->
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Darkness463 &copy; 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.darkness463.top/2018/09/30/Android-Virtual-Check-Plus/&title=《Android多开检测的另一个思路》 — 变猴旅程&pic=https://blog.darkness463.top/img/avatar.png" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.darkness463.top/2018/09/30/Android-Virtual-Check-Plus/&title=《Android多开检测的另一个思路》 — 变猴旅程&source=之前写了篇检测多开的文章后，经过几个月的时间，基本上都已经被各多开软件绕过了。最近无意中发现了一些新特征，在特定环境下可以用来检测多开环境，特此来分享一下。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.darkness463.top/2018/09/30/Android-Virtual-Check-Plus/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android多开检测的另一个思路》 — 变猴旅程&url=https://blog.darkness463.top/2018/09/30/Android-Virtual-Check-Plus/&via=https://blog.darkness463.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.darkness463.top/2018/09/30/Android-Virtual-Check-Plus/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACtUlEQVR42u3awW7jMAwE0P7/T3evBbp1ZkipSIHnU5AGtp4XELVDfnzE1+e36+v33z8n3zzf8/lZhy88PDy89dKfH9ku9/mXz98kv39+Lh4eHt493k87ar7Ft+BZqcjXjIeHh/duvFl5eC4z+Rrw8PDw/jpvFmEkeDw8PLx35iVhRL6tzyLazeH7QNaCh4eHF/PyLf59Pl/p7+Hh4eGtu+r5hpsfjpM7//RNvVo8PDy8C7x8wz3Vympf0Cz2xcPDw/sdXj4s1T44jzmSO7ejYHh4eHhnefv0Ij/+tpjZmFdRbfDw8PDW+eesYZ83tzaMA6EJHh4e3iFesq0n2/csom3HsOqShoeHh3eZNxu9al9cG3AkReVFfw8PDw/vAi9v3ufH4jaWbePjKFjBw8PDu8Brj8X51jxrmLUH62QNeHh4eL/Pa3fa2ejADBaVEDw8PLwLvE0YkYe2s3baDDP8N8TDw8OLeW24cAqZN8DaYYV6ngsPDw8v5rVxw6lWVh0oxGMHUUnAw8PDW/PaZlXS4N8UmFmL7j+/x8PDw7vAm41P7ZOPtlS0zTY8PDy8e7x2O55FCW05OTZ0hYeHh3eBl996c+T9HF0t7EWYi4eHh3eId6rtlAe4s2IzLBt4eHh4F3jJtQlqW/CsbCSvGw8PD+8sbzM4lbf/80N5fkAvwgg8PDy8C7w6w3gsEm3jqh3Pyj/j4eHh3ebNYtO2DMxKQn5wr6cb8PDw8GLerCk1Kyf34owf/4qHh4d3gTfrE+ULTRpa+ejA/gXh4eHhneK1w0/5MTqJME7lrnUDDA8PD2/NywPT/bJmLyV/Lh4eHt7f5c2O4G1pefF7PDw8vDfgJcfrPNpIqLOgGQ8PD+82b3Pw3YxttXerXzEeHh7eBV77H/5iUy6baskh+3k9q/4eHh4e3mvePy5mVLltmIMwAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
